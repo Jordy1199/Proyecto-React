@@ -256,13 +256,13 @@ function App() {
 
             <div className="mobile__buttons">
               <img
-                src="/src/images/app1.jpeg"
+                src="/images/app1.jpeg"
                 alt="PlayStore"
                 loading="lazy"
               />
 
               <img
-                src="/src/images/app2.jpg"
+                src="/images/app2.jpg"
                 alt="GooglePlay"
                 loading="lazy"
               />
@@ -272,7 +272,7 @@ function App() {
 
           <div className="mobile__img">
             <img
-              src="/src/images/im4.png"
+              src="/images/im4.png"
               alt="Carmobile"
               loading="lazy"
             />
@@ -294,17 +294,17 @@ function App() {
           <div className="gallery__images">
 
             <img
-              src="/src/images/im1.jpg"
+              src="/images/im1.jpg"
               alt="Imagen 1"
             />
 
             <img
-              src="/src/images/im2.jpg"
+              src="/images/im2.jpg"
               alt="Imagen 2"
             />
 
             <img
-              src="/src/images/im3.jpg"
+              src="/images/im3.jpg"
               alt="Imagen 3"
             />
 
