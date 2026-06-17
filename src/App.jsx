@@ -33,6 +33,7 @@ function App() {
         <Services/>
         <AppSection/>
         <Gallery/>
+        <Footer />
       </main>
     </>
   );
