@@ -1,0 +1,96 @@
+.reservation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    width: 100%;
+}
+
+.form-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid var(--border-gray);
+    padding: 14px 18px;
+    border-radius: 10px;
+    background-color: var(--bg-white);
+}
+
+.form-item .label {
+    color: var(--text-light);
+    width: 110px;
+    flex-shrink: 0;
+    font-weight: 500;
+}
+
+.form-item .value {
+    flex: 1;
+    text-align: left;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.form-item .placeholder {
+    color: #a4b5cb;
+}
+
+.icon-left {
+    font-size: 1.25rem;
+    color: var(--epn-blue);
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.column-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.text-xs {
+    font-size: 0.78rem;
+    color: var(--text-light);
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.btn-reservar {
+    background-color: var(--epn-blue);
+    color: white;
+    border: none;
+    padding: 18px;
+    border-radius: 10px;
+    font-size: clamp(1rem, 0.5vw + 0.8rem, 1.15rem);
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    box-shadow: 0 4px 6px -1px rgba(0, 45, 93, 0.2);
+}
+
+@media (min-width: 680px) {
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .form-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .btn-reservar {
+        width: 340px;
+        align-self: center;
+    }
+}
