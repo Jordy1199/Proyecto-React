@@ -9,7 +9,8 @@ import Search from './components/search/Search';
 import Reservation from './components/reservation/Reservation';
 import InfoTabs from './components/infoTabs/InfoTabs';
 import Services from './components/services/Services';
-
+import AppSection from "./components/appSection/AppSection.jsx";
+import Gallery from "./components/gallery/Gallery.jsx";
 
 function App() {
   useEffect(() => {
@@ -28,7 +29,9 @@ function App() {
         <Search />
         <Reservation />
         <InfoTabs />
-        <Services/> 
+        <Services/>
+        <AppSection/>
+        <Gallery/>
       </main>
     </>
   );
