@@ -7,6 +7,9 @@ import Status from './components/status/Status';
 import Types from './components/types/Types';
 import Search from './components/search/Search';
 import Reservation from './components/reservation/Reservation';
+import InfoTabs from './components/infoTabs/InfoTabs';
+import Services from './components/services/Services';
+
 
 function App() {
   useEffect(() => {
@@ -24,6 +27,8 @@ function App() {
         <Types />
         <Search />
         <Reservation />
+        <InfoTabs />
+        <Services/> 
       </main>
     </>
   );
