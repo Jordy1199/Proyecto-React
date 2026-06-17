@@ -1,0 +1,32 @@
+import { useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+import Header from './components/header/Header';
+import Status from './components/status/Status';
+import Types from './components/types/Types';
+import Search from './components/search/Search';
+import Reservation from './components/reservation/Reservation';
+
+function App() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: false,
+    });
+  }, []);
+
+  return (
+    <>
+      <Header />
+      <main className="main-content">
+        <Status />
+        <Types />
+        <Search />
+        <Reservation />
+      </main>
+    </>
+  );
+}
+
+export default App;

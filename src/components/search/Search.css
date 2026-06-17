@@ -1,0 +1,149 @@
+.search-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-gray);
+    border-radius: 10px;
+    padding: 14px 18px;
+    background-color: var(--bg-white);
+    gap: 10px;
+}
+
+.filter-icon {
+    font-size: 1.2rem;
+    width: 28px;
+    color: var(--epn-blue);
+}
+
+.filter-label {
+    font-size: var(--fz-sm);
+    color: var(--text-light);
+    width: 120px;
+    flex-shrink: 0;
+}
+
+.filter-value {
+    flex: 1;
+    font-size: var(--fz-body);
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.filter-arrow {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.result-card {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border-gray);
+    display: flex;
+    flex-direction: column;
+}
+
+.result-header {
+    background-color: var(--epn-blue);
+    color: white;
+    text-align: center;
+    padding: 14px;
+}
+
+.result-header h3 {
+    margin: 0;
+    font-size: var(--fz-card-title);
+    font-weight: 600;
+}
+
+.result-body {
+    display: flex;
+    flex-direction: column;
+    background-color: #f8fafc;
+}
+
+.result-details {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+}
+
+.result-details p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon-detail {
+    color: var(--epn-blue);
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+.status-available {
+    color: var(--green-available);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.status-available .dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--green-available);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px var(--green-available);
+}
+
+.result-map {
+    width: 100%;
+    min-height: 260px;
+    display: block;
+}
+
+.result-map iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 260px;
+    object-fit: cover;
+    display: block;
+    border: none;
+    border-top: 1px solid var(--border-gray);
+}
+
+@media (min-width: 1024px) {
+    .result-body {
+        flex-direction: row;
+        min-height: 280px;
+    }
+    .result-details {
+        flex: 1;
+    }
+    .result-map {
+        flex: 1.1;
+        min-height: auto;
+    }
+    .result-map iframe {
+        border-top: none;
+        border-left: 1px solid var(--border-gray);
+        height: 100%;
+    }
+}
+
+@media (min-width: 1600px) {
+    .result-map {
+        flex: 1.4;
+    }
+}
