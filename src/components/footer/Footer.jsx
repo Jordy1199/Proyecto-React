@@ -1,31 +1,30 @@
-import './Footer.css';
-import { motion } from 'framer-motion'; // 1. Importamos la librería
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+
+import "./Footer.css";
 
 function Footer() {
-  // 2. Definimos las variantes de animación para el contenedor de las columnas
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2 // Hace que las columnas aparezcan una tras otra con retraso
-      }
-    }
+        staggerChildren: 0.2,
+      },
+    },
   };
 
-  // 3. Definimos la animación para cada columna individual
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
+    visible: {
+      y: 0,
       opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" }
-    }
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
   };
 
   return (
-    // Transformamos la etiqueta en motion.footer para animar el fondo al cargar
-    <motion.footer 
+    <motion.footer
       className="footer"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -50,26 +49,39 @@ function Footer() {
 
         <hr className="footer__divider" />
 
-        {/* El contenedor principal de las columnas coordinará la aparición en cascada */}
-        <motion.div 
+        <motion.div
           className="footer__links"
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible" // La animación inicia cuando el usuario baja con el scroll hasta el footer
-          viewport={{ once: true, amount: 0.2 }} // Ocurre solo una vez
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
         >
-          {/* Columna 1 */}
           <motion.div className="footer__col" variants={itemVariants}>
             <h4 className="footer__col-title">Navegación</h4>
             <ul className="footer__list">
-              <li><a href="#"><i className="fa-solid fa-house"></i> Inicio</a></li>
-              <li><a href="#"><i className="fa-regular fa-calendar-days"></i> Mis Reservas</a></li>
-              <li><a href="#"><i className="fa-solid fa-clock-rotate-left"></i> Historial</a></li>
-              <li><a href="#"><i className="fa-solid fa-chart-line"></i> Reportes</a></li>
+              <li>
+                <Link to="/">
+                  <i className="fa-solid fa-house"></i> Inicio
+                </Link>
+              </li>
+              <li>
+                <Link to="/reservaciones">
+                  <i className="fa-regular fa-calendar-days"></i> Reservaciones
+                </Link>
+              </li>
+              <li>
+                <Link to="/estado">
+                  <i className="fa-solid fa-chart-line"></i> Estado
+                </Link>
+              </li>
+              <li>
+                <Link to="/servicios">
+                  <i className="fa-solid fa-map-location-dot"></i> Servicios
+                </Link>
+              </li>
             </ul>
           </motion.div>
 
-          {/* Columna 2 */}
           <motion.div className="footer__col" variants={itemVariants}>
             <h4 className="footer__col-title">Contacto</h4>
             <ul className="footer__list">
@@ -79,7 +91,6 @@ function Footer() {
             </ul>
           </motion.div>
 
-          {/* Columna 3 */}
           <motion.div className="footer__col" variants={itemVariants}>
             <h4 className="footer__col-title">Equipo</h4>
             <ul className="footer__list footer__list--plain">
@@ -95,7 +106,7 @@ function Footer() {
 
         <div className="footer__bottom">
           <p className="footer__copy">
-            © 2026 EPN Accesible · Proyecto de Diseño de Interfaces · Escuela Politécnica Nacional
+            2026 EPN Accesible - Proyecto de Diseño de Interfaces - Escuela Politécnica Nacional
           </p>
           <div className="footer__socials">
             <a href="#" aria-label="Facebook"><i className="fa-brands fa-facebook-f"></i></a>

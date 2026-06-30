@@ -8,6 +8,7 @@ import { getFirestore } from "firebase/firestore";
 //    y copia el objeto de configuración que te entrega aquí abajo.
 // 4. En "Authentication" > "Sign-in method" activa el proveedor "Correo electrónico/contraseña".
 // 5. En "Firestore Database" crea una base de datos (modo prueba está bien para empezar).
+
 const firebaseConfig = {
   apiKey: "AIzaSyCb6BEAAgsSlZIX9Ij0M0S-7IPch5z4Zrc",
   authDomain: "epn-accesible.firebaseapp.com",
