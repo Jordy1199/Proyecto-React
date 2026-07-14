@@ -1,96 +1,164 @@
 .reservation-form {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
 }
 
 .form-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-    width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  width: 100%;
 }
 
 .form-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    border: 1px solid var(--border-gray);
-    padding: 14px 18px;
-    border-radius: 10px;
-    background-color: var(--bg-white);
+  align-items: center;
+  background-color: var(--bg-white);
+  border: 1px solid var(--border-gray);
+  border-radius: 10px;
+  display: flex;
+  gap: 14px;
+  padding: 14px 18px;
 }
 
 .form-item .label {
-    color: var(--text-light);
-    width: 110px;
-    flex-shrink: 0;
-    font-weight: 500;
+  color: var(--text-light);
+  flex-shrink: 0;
+  font-weight: 500;
+  width: 110px;
 }
 
 .form-item .value {
-    flex: 1;
-    text-align: left;
-    color: var(--text-main);
-    font-weight: 600;
+  background: transparent;
+  border: 0;
+  color: var(--text-main);
+  flex: 1;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  min-width: 0;
 }
 
-.form-item .placeholder {
-    color: #a4b5cb;
+.form-item .value:focus {
+  outline: 2px solid #93c5fd;
+  border-radius: 4px;
 }
 
 .icon-left {
-    font-size: 1.25rem;
-    color: var(--epn-blue);
-    width: 24px;
-    text-align: center;
-    flex-shrink: 0;
-}
-
-.column-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.text-xs {
-    font-size: 0.78rem;
-    color: var(--text-light);
+  color: var(--epn-blue);
+  flex-shrink: 0;
+  font-size: 1.25rem;
+  text-align: center;
+  width: 24px;
 }
 
 .full-width {
-    grid-column: 1 / -1;
+  grid-column: 1 / -1;
 }
 
 .btn-reservar {
-    background-color: var(--epn-blue);
-    color: white;
-    border: none;
-    padding: 18px;
-    border-radius: 10px;
-    font-size: clamp(1rem, 0.5vw + 0.8rem, 1.15rem);
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    width: 100%;
-    box-shadow: 0 4px 6px -1px rgba(0, 45, 93, 0.2);
+  align-self: center;
+  background-color: var(--epn-blue);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px -1px rgba(0, 45, 93, 0.2);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  font-size: 1rem;
+  font-weight: 700;
+  gap: 12px;
+  justify-content: center;
+  padding: 18px;
+  width: 100%;
+}
+
+.btn-reservar:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.reservation-message {
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+.reservation-message.success {
+  color: var(--green-available);
+}
+
+.reservation-message.error {
+  color: var(--red-occupied);
+}
+
+.my-reservations {
+  border-top: 1px solid var(--border-gray);
+  margin-top: 28px;
+  padding-top: 20px;
+}
+
+.my-reservations h3 {
+  color: var(--epn-blue);
+  margin: 0 0 12px;
+}
+
+.empty-reservations {
+  color: var(--text-light);
+}
+
+.reservation-record {
+  align-items: center;
+  border: 1px solid var(--border-gray);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding: 14px;
+}
+
+.reservation-record div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reservation-record span,
+.reservation-record small {
+  color: var(--text-light);
+}
+
+.reservation-record button {
+  background: white;
+  border: 1px solid var(--red-occupied);
+  border-radius: 6px;
+  color: var(--red-occupied);
+  cursor: pointer;
+  font-weight: 600;
+  padding: 8px 12px;
+}
+
+.status-active {
+  color: var(--green-available);
+}
+
+.status-cancelled {
+  color: var(--red-occupied);
 }
 
 @media (min-width: 680px) {
-    .form-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (min-width: 1024px) {
-    .form-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    .btn-reservar {
-        width: 340px;
-        align-self: center;
-    }
+  .form-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .btn-reservar {
+    width: 340px;
+  }
 }

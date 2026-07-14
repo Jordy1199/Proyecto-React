@@ -1,162 +1,215 @@
-/* ================= VARIABLES UNIFICADAS Y TIPOGRAFÍA FLUIDA ================= */
 :root {
-    --epn-blue: #002D5D;
-    --epn-blue-hover: #001f40;
-    --green-available: #00a859;
-    --green-light: #e6f4ea;
-    --red-occupied: #ff4d4d;
-    --blue-reserved: #3b82f6;
-    --bg-main: #f4f7f6;
-    --bg-white: #ffffff;
-    --border-gray: #e2e8f0;
-    --text-main: #334155;
-    --text-light: #64748b;
-    --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-    --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
-    --transition-speed: 0.25s;
-    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --epn-blue: #002d5d;
+  --epn-blue-hover: #001f40;
+  --green-available: #00a859;
+  --green-light: #e6f4ea;
+  --red-occupied: #ff4d4d;
+  --blue-reserved: #3b82f6;
+  --bg-main: #f4f7f6;
+  --bg-white: #ffffff;
+  --border-gray: #e2e8f0;
+  --text-main: #334155;
+  --text-light: #64748b;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --transition-speed: 0.25s;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
 
-    /* Escalado tipográfico adaptativo profesional */
-    --fz-h1: clamp(1.25rem, 2vw + 0.8rem, 2.25rem);
-    --fz-section-title: clamp(1.15rem, 1.2vw + 0.85rem, 1.65rem);
-    --fz-card-title: clamp(1rem, 0.8vw + 0.8rem, 1.3rem);
-    --fz-body: clamp(0.88rem, 0.3vw + 0.82rem, 1.05rem);
-    --fz-sm: clamp(0.75rem, 0.1vw + 0.72rem, 0.88rem);
+  --fz-h1: clamp(1.25rem, 2vw + 0.8rem, 2.25rem);
+  --fz-section-title: clamp(1.15rem, 1.2vw + 0.85rem, 1.65rem);
+  --fz-card-title: clamp(1rem, 0.8vw + 0.8rem, 1.3rem);
+  --fz-body: clamp(0.88rem, 0.3vw + 0.82rem, 1.05rem);
+  --fz-sm: clamp(0.75rem, 0.1vw + 0.72rem, 0.88rem);
 
-    /* Espaciados adaptativos */
-    --pad-section: clamp(1rem, 2vw + 0.8rem, 2.5rem);
-    --gap-main: clamp(1rem, 2.5vw + 0.5rem, 2rem);
-    --max-w-container: 1600px;
+  --pad-section: clamp(1rem, 2vw + 0.8rem, 2.5rem);
+  --gap-main: clamp(1rem, 2.5vw + 0.5rem, 2rem);
+  --max-w-container: 1600px;
 }
 
-/* ================= RESET Y HOJA BASE ================= */
-*, *::before, *::after {
-    box-sizing: border-box;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    width: 100%;
-    scroll-behavior: smooth;
+html,
+body {
+  margin: 0;
+  overflow-x: hidden;
+  padding: 0;
+  scroll-behavior: smooth;
+  width: 100%;
 }
 
 body {
-    font-family: var(--font-family);
-    color: var(--text-main);
-    background-color: var(--bg-main);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-size: var(--fz-body);
-    line-height: 1.5;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-family);
+  font-size: var(--fz-body);
+  line-height: 1.5;
+  min-height: 100vh;
 }
 
 #root {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
 }
 
-/* ================= ESTRUCTURA GENERAL DE SECCIONES ================= */
 .main-content {
-    padding: var(--gap-main) clamp(1rem, 3vw, 2.5rem);
-    max-width: var(--max-w-container);
-    margin: 0 auto;
-    flex: 1;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-main);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--gap-main);
+  margin: 0 auto;
+  max-width: var(--max-w-container);
+  padding: var(--gap-main) clamp(1rem, 3vw, 2.5rem);
+  width: 100%;
 }
 
 .section {
-    background-color: var(--bg-white);
-    border-radius: 14px;
-    padding: var(--pad-section);
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
+  background-color: var(--bg-white);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--pad-section);
+  width: 100%;
 }
 
 .section-title {
-    text-align: center;
-    font-size: var(--fz-section-title);
-    margin-top: 0;
-    margin-bottom: var(--pad-section);
-    color: var(--epn-blue);
-    border-bottom: 2px solid var(--border-gray);
-    padding-bottom: 12px;
-    font-weight: 700;
+  border-bottom: 2px solid var(--border-gray);
+  color: var(--epn-blue);
+  font-size: var(--fz-section-title);
+  font-weight: 700;
+  margin-bottom: var(--pad-section);
+  margin-top: 0;
+  padding-bottom: 12px;
+  text-align: center;
 }
 
-/* ================= DINÁMICAS INTERACTIVAS (MICRO-UX) ================= */
 .interactive {
-    transition: transform var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--transition-speed);
-    cursor: pointer;
+  cursor: pointer;
+  transition: transform var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow var(--transition-speed);
 }
 
 .interactive:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
 }
 
 .interactive-row {
-    transition: background-color var(--transition-speed), border-color var(--transition-speed);
-    cursor: pointer;
+  cursor: pointer;
+  transition: background-color var(--transition-speed),
+    border-color var(--transition-speed);
 }
 
 .interactive-row:hover {
-    background-color: #f8fafc;
-    border-color: #cbd5e1;
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
 }
 
 .interactive-btn {
-    transition: background-color var(--transition-speed), transform 0.15s ease, box-shadow var(--transition-speed);
+  transition: background-color var(--transition-speed), transform 0.15s ease,
+    box-shadow var(--transition-speed);
 }
 
 .interactive-btn:hover {
-    background-color: var(--epn-blue-hover);
-    box-shadow: 0 6px 16px rgba(0, 45, 93, 0.35);
+  background-color: var(--epn-blue-hover);
+  box-shadow: 0 6px 16px rgba(0, 45, 93, 0.35);
 }
 
 .interactive-btn:active {
-    transform: scale(0.985);
+  transform: scale(0.985);
 }
 
-/* ================= GRID DE DISTRIBUCIÓN RESPONSIVE GENERAL ================= */
 @media (min-width: 1024px) {
-    .main-content {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        column-gap: var(--gap-main);
-        row-gap: var(--gap-main);
-    }
+  .main-content {
+    column-gap: var(--gap-main);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: var(--gap-main);
+  }
 
-    .status-section      { grid-column: 1 / -1; }
-    .types-section       { grid-column: 1 / 2; display: flex; flex-direction: column; }
-    .search-section      { grid-column: 2 / 3; }
-    .reservation-section { grid-column: 1 / -1; }
-    .tabs-section        { grid-column: 1 / 2; }
-    .services-section    { grid-column: 2 / 3; }
-    .app-section         { grid-column: 1 / -1; }
-    .gallery-section     { grid-column: 1 / -1; }
+  .status-section {
+    grid-column: 1 / -1;
+  }
+
+  .types-section {
+    display: flex;
+    flex-direction: column;
+    grid-column: 1 / 2;
+  }
+
+  .search-section {
+    grid-column: 2 / 3;
+  }
+
+  .reservation-section {
+    grid-column: 1 / -1;
+  }
+
+  .tabs-section {
+    grid-column: 1 / -1;
+  }
+
+  .services-section {
+    grid-column: 1 / -1;
+  }
+
+  .app-section {
+    grid-column: 1 / -1;
+  }
+
+  .gallery-section {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (min-width: 1600px) {
-    .main-content {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .status-section      { grid-column: 1 / -1; }
-    .types-section       { grid-column: 1 / 2; display: flex; flex-direction: column; }
-    .search-section      { grid-column: 2 / 4; }
-    .reservation-section { grid-column: 1 / -1; }
-    .tabs-section        { grid-column: 1 / 2; }
-    .services-section    { grid-column: 2 / 4; }
-    .app-section         { grid-column: 1 / -1; }
-    .gallery-section     { grid-column: 1 / -1; }
+  .main-content {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .status-section {
+    grid-column: 1 / -1;
+  }
+
+  .types-section {
+    display: flex;
+    flex-direction: column;
+    grid-column: 1 / 2;
+  }
+
+  .search-section {
+    grid-column: 2 / 4;
+  }
+
+  .reservation-section {
+    grid-column: 1 / -1;
+  }
+
+  .tabs-section {
+    grid-column: 1 / -1;
+  }
+
+  .services-section {
+    grid-column: 1 / -1;
+  }
+
+  .app-section {
+    grid-column: 1 / -1;
+  }
+
+  .gallery-section {
+    grid-column: 1 / -1;
+  }
 }

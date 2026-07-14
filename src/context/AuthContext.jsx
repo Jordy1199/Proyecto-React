@@ -8,6 +8,7 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+
 import { auth, db } from "../firebase/firebaseConfig";
 import { AuthContext } from "./authContext";
 
@@ -19,35 +20,41 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
+
       if (firebaseUser) {
         try {
           const snap = await getDoc(doc(db, "usuarios", firebaseUser.uid));
           setPerfil(snap.exists() ? snap.data() : null);
         } catch (error) {
           console.error("Error al cargar el perfil:", error);
+          setPerfil(null);
         }
       } else {
         setPerfil(null);
       }
+
       setCargando(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  // Revisa si un correo ya está registrado antes de intentar el login
   const correoExiste = async (correo) => {
     const metodos = await fetchSignInMethodsForEmail(auth, correo);
     return metodos.length > 0;
   };
 
-  const login = async (correo, password) => {
-    return signInWithEmailAndPassword(auth, correo, password);
-  };
+  const login = (correo, password) =>
+    signInWithEmailAndPassword(auth, correo, password);
 
   const registrar = async ({ nombre, apellido, correo, edad, password }) => {
-    const credenciales = await createUserWithEmailAndPassword(auth, correo, password);
-    const { user: nuevoUsuario } = credenciales;
+    const credenciales = await createUserWithEmailAndPassword(
+      auth,
+      correo,
+      password
+    );
+
+    const nuevoUsuario = credenciales.user;
 
     await updateProfile(nuevoUsuario, {
       displayName: `${nombre} ${apellido}`,
@@ -62,22 +69,29 @@ export const AuthProvider = ({ children }) => {
     };
 
     await setDoc(doc(db, "usuarios", nuevoUsuario.uid), datosPerfil);
-    setPerfil(datosPerfil);
+
+    // Evita que Firebase deje abierta la sesión después de registrar.
+    setPerfil(null);
+    await signOut(auth);
 
     return credenciales;
   };
 
   const logout = () => signOut(auth);
 
-  const value = {
-    user,
-    perfil,
-    cargando,
-    login,
-    registrar,
-    logout,
-    correoExiste,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        perfil,
+        cargando,
+        login,
+        registrar,
+        logout,
+        correoExiste,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };

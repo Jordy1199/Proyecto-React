@@ -8,11 +8,19 @@ import "./Header.css";
 
 const navItems = [
   { to: "/", label: "Inicio", icon: "fa-solid fa-house" },
-  { to: "/servicios", label: "Servicios", icon: "fa-solid fa-map-location-dot" },
+  {
+    to: "/servicios",
+    label: "Servicios",
+    icon: "fa-solid fa-map-location-dot",
+  },
   { to: "/galeria", label: "Galería", icon: "fa-regular fa-images" },
   { to: "/tipos", label: "Tipos", icon: "fa-solid fa-layer-group" },
   { to: "/estado", label: "Estado", icon: "fa-solid fa-chart-simple" },
-  { to: "/reservaciones", label: "Reservaciones", icon: "fa-regular fa-calendar-check" },
+  {
+    to: "/reservaciones",
+    label: "Reservaciones",
+    icon: "fa-regular fa-calendar-check",
+  },
 ];
 
 const Header = () => {
@@ -22,22 +30,19 @@ const Header = () => {
 
   useEffect(() => {
     const typed = new Typed(typedTarget.current, {
-      strings: [
-        "EPN Accesible",
-        "Gestión de Espacios",
-        "Inclusión Universitaria",
-      ],
-      typeSpeed: 60,
-      backSpeed: 40,
+      strings: ["EPN Accesible", "Gestión de Espacios"],
+      typeSpeed: 70,
+      backSpeed: 45,
+      backDelay: 1800,
       loop: true,
+      showCursor: true,
+      cursorChar: "|",
     });
 
     return () => typed.destroy();
   }, []);
 
-  const cerrarMenu = () => {
-    setMenuAbierto(false);
-  };
+  const cerrarMenu = () => setMenuAbierto(false);
 
   const handleLogoutClick = async () => {
     await logout();
@@ -50,7 +55,12 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-container">
-        <NavLink className="header-logo" to="/" onClick={cerrarMenu} aria-label="Ir al inicio">
+        <NavLink
+          className="header-logo"
+          to="/"
+          onClick={cerrarMenu}
+          aria-label="Ir al inicio"
+        >
           <motion.div
             className="logo-circle"
             whileHover={{ rotate: 180 }}
@@ -64,13 +74,16 @@ const Header = () => {
           <h1 className="header-title-text">
             <span ref={typedTarget}></span>
           </h1>
+
           <p className="header-subtitle-text">
             Gestión de Espacios Preferenciales
           </p>
         </div>
 
         <button
-          className={`header-menu-btn${menuAbierto ? " header-menu-btn--open" : ""}`}
+          className={`header-menu-btn${
+            menuAbierto ? " header-menu-btn--open" : ""
+          }`}
           type="button"
           aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
           aria-controls="main-navigation"
@@ -103,7 +116,9 @@ const Header = () => {
           {user && (
             <div className="header-user-info header-nav-user" title={user.email}>
               <i className="fa-regular fa-user"></i>
-              <span className="header-user-name">{perfil?.nombre || user.email}</span>
+              <span className="header-user-name">
+                {perfil?.nombre || user.email}
+              </span>
             </div>
           )}
 

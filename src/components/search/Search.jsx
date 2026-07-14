@@ -1,51 +1,131 @@
-import './Search.css';
+import { useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import AOS from "aos";
+
+import {
+  cuposDisponibles,
+  espacios,
+  tiposEspacio,
+} from "../../data/spaces";
+import { useReservations } from "../../hooks/useReservations";
+import "./Search.css";
 
 const Search = () => {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { reservas } = useReservations();
+
+  const tipoSeleccionado = searchParams.get("tipo") || "todos";
+
+  const resultados = useMemo(() => {
+    if (tipoSeleccionado === "todos") return tiposEspacio;
+
+    return tiposEspacio.filter((tipo) => tipo.id === tipoSeleccionado);
+  }, [tipoSeleccionado]);
+
+  const cambiarFiltro = (tipo) => {
+    if (tipo === "todos") {
+      setSearchParams({});
+    } else {
+      setSearchParams({ tipo });
+    }
+
+    window.setTimeout(() => AOS.refreshHard(), 100);
+  };
+
+  const reservarTipo = (tipoId) => {
+    const espacio = espacios.find((item) => item.tipo === tipoId);
+
+    if (!espacio) return;
+
+    navigate("/reservaciones", {
+      state: { espacioId: espacio.id },
+    });
+  };
+
   return (
-    <section className="section search-section" data-aos="fade-up">
-      <h2 className="section-title">Buscar Espacio</h2>
+    <section
+      id="buscar-espacio"
+      className="section search-section"
+      data-aos="fade-up"
+    >
+      <h2 className="section-title">Buscar espacio</h2>
+
       <div className="search-filters">
-        <div className="filter-row interactive-row">
-          <i className="fa-regular fa-building filter-icon"></i>
-          <span className="filter-label">Campus</span>
-          <span className="filter-value">EPN - Ladrón de Guevara</span>
-          <i className="fa-solid fa-arrow-down filter-arrow"></i>
-        </div>
-        <div className="filter-row interactive-row">
-          <i className="fa-solid fa-location-dot filter-icon"></i>
-          <span className="filter-label">Facultad / Edificio</span>
-          <span className="filter-value">Sistemas</span>
-          <i className="fa-solid fa-arrow-down filter-arrow"></i>
-        </div>
-        <div className="filter-row interactive-row">
+        <label className="filter-row">
           <i className="fa-solid fa-tags filter-icon"></i>
-          <span className="filter-label">Tipo de Espacio</span>
-          <span className="filter-value">Parqueadero accesible</span>
-          <i className="fa-solid fa-arrow-down filter-arrow"></i>
-        </div>
+
+          <span className="filter-label">Tipo de espacio</span>
+
+          <select
+            className="filter-value"
+            value={tipoSeleccionado}
+            onChange={(e) => cambiarFiltro(e.target.value)}
+          >
+            <option value="todos">Todos los tipos</option>
+
+            {tiposEspacio.map((tipo) => (
+              <option key={tipo.id} value={tipo.id}>
+                {tipo.nombre}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
-      <div className="result-card interactive" data-aos="zoom-in">
-        <div className="result-header">
-          <h3>Parqueadero P1</h3>
-        </div>
-        <div className="result-body">
-          <div className="result-details">
-            <p><i className="fa-regular fa-building icon-detail"></i> <strong> Capacidad:</strong> 2 espacios</p>
-            <p><i className="fa-solid fa-location-dot icon-detail"></i> <strong> Ubicación:</strong> Planta Baja</p>
-            <p><i className="fa-regular fa-clock icon-detail"></i> <strong> Horario:</strong> 06h00 - 22h00</p>
-            <div className="status-available"><span className="dot"></span> Disponible</div>
-          </div>
-          <div className="result-map">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7916501124523!2d-78.49207102432047!3d-0.20949549978844056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d59a107e1cd44b%3A0x88a284f66939ed4!2sESCUELA%20POLIT%C3%89CNICA%20NACIONAL!5e0!3m2!1ses!2sec!4v1779234836324!5m2!1ses!2sec"
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Mapa de ubicación"
-            ></iframe>
-          </div>
-        </div>
+      <div className="search-results">
+        {resultados.map((tipo, indice) => {
+          const disponibles = cuposDisponibles(tipo.id, reservas);
+          const esFiltroIndividual = tipoSeleccionado !== "todos";
+
+          return (
+            <article
+              className={`search-type-card${
+                esFiltroIndividual ? " search-type-card--expanded" : ""
+              }`}
+              key={`${tipoSeleccionado}-${tipo.id}`}
+              data-aos="fade-up"
+              data-aos-duration="500"
+              data-aos-delay={indice * 80}
+            >
+              <div className="search-type-icon">
+                <i className={`fa-solid ${tipo.icono}`}></i>
+              </div>
+
+              <div className="search-type-content">
+                <p className="search-type-label">Tipo de espacio</p>
+                <h3>{tipo.nombre}</h3>
+
+                <p className="search-type-description">
+                  Espacios diseñados para facilitar una movilidad segura,
+                  cómoda e inclusiva dentro del campus.
+                </p>
+              </div>
+
+              <div className="search-type-actions">
+                <button
+                  className="search-reserve-btn"
+                  type="button"
+                  disabled={disponibles <= 0}
+                  onClick={() => reservarTipo(tipo.id)}
+                >
+                  <i className="fa-regular fa-calendar-check"></i>
+                  {disponibles > 0 ? "Reservar" : "Sin cupos"}
+                </button>
+
+                {tipoSeleccionado !== "todos" && (
+                  <button
+                    className="search-show-all-btn"
+                    type="button"
+                    onClick={() => cambiarFiltro("todos")}
+                  >
+                    Ver todos los tipos
+                  </button>
+                )}
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

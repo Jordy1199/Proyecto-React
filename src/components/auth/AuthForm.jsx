@@ -11,7 +11,11 @@ const AuthForm = ({ onSuccess }) => {
   const [error, setError] = useState("");
   const [exito, setExito] = useState("");
 
-  const [loginData, setLoginData] = useState({ correo: "", password: "" });
+  const [loginData, setLoginData] = useState({
+    correo: "",
+    password: "",
+  });
+
   const [registroData, setRegistroData] = useState({
     nombre: "",
     apellido: "",
@@ -49,7 +53,10 @@ const AuthForm = ({ onSuccess }) => {
 
   const irARegistro = (correoPrecargado = "") => {
     limpiarMensajes();
-    setRegistroData((prev) => ({ ...prev, correo: correoPrecargado }));
+    setRegistroData((prev) => ({
+      ...prev,
+      correo: correoPrecargado,
+    }));
     setVista("registro");
   };
 
@@ -59,10 +66,12 @@ const AuthForm = ({ onSuccess }) => {
       "auth/user-not-found": "No existe una cuenta con ese correo.",
       "auth/wrong-password": "La contraseña es incorrecta.",
       "auth/invalid-credential": "Correo o contraseña incorrectos.",
-      "auth/email-already-in-use": "Ese correo ya está registrado. Intenta iniciar sesión.",
+      "auth/email-already-in-use":
+        "Ese correo ya está registrado. Intenta iniciar sesión.",
       "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
       "auth/too-many-requests": "Demasiados intentos. Intenta más tarde.",
     };
+
     return mensajes[codigo] || "Ocurrió un error. Intenta de nuevo.";
   };
 
@@ -76,12 +85,10 @@ const AuthForm = ({ onSuccess }) => {
       setExito("¡Bienvenido de nuevo!");
       finalizarAutenticacion(800);
     } catch (err) {
-      const codigosSinCuenta = [
-        "auth/user-not-found",
-        "auth/invalid-credential",
-      ];
-
-      if (codigosSinCuenta.includes(err.code)) {
+      if (
+        err.code === "auth/user-not-found" ||
+        err.code === "auth/invalid-credential"
+      ) {
         irARegistro(loginData.correo);
         setError(
           "No tienes una cuenta vinculada a ese correo o la contraseña no coincide. Si es tu primera vez, regístrate."
@@ -109,10 +116,27 @@ const AuthForm = ({ onSuccess }) => {
     }
 
     setCargando(true);
+
     try {
       await registrar(registroData);
-      setExito("¡Cuenta creada con éxito!");
-      finalizarAutenticacion(900);
+
+      setExito("Usuario registrado correctamente. Ahora inicia sesión.");
+
+      setLoginData({
+        correo: registroData.correo,
+        password: "",
+      });
+
+      setRegistroData({
+        nombre: "",
+        apellido: "",
+        correo: "",
+        edad: "",
+        password: "",
+        confirmar: "",
+      });
+
+      setVista("login");
     } catch (err) {
       setError(traducirError(err.code));
     } finally {
@@ -126,9 +150,11 @@ const AuthForm = ({ onSuccess }) => {
         <div className="auth-logo-circle">
           <i className="fa-solid fa-wheelchair"></i>
         </div>
+
         <h2 className="auth-title">
           {vista === "login" ? "Iniciar sesión" : "Crear cuenta"}
         </h2>
+
         <p className="auth-subtitle">
           {vista === "login"
             ? "Accede a tu cuenta de EPN Accesible"
@@ -148,7 +174,9 @@ const AuthForm = ({ onSuccess }) => {
               type="email"
               required
               value={loginData.correo}
-              onChange={(e) => setLoginData({ ...loginData, correo: e.target.value })}
+              onChange={(e) =>
+                setLoginData({ ...loginData, correo: e.target.value })
+              }
               placeholder="ejemplo@correo.com"
             />
           </div>
@@ -160,7 +188,9 @@ const AuthForm = ({ onSuccess }) => {
               type="password"
               required
               value={loginData.password}
-              onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+              onChange={(e) =>
+                setLoginData({ ...loginData, password: e.target.value })
+              }
               placeholder="********"
             />
           </div>
@@ -171,7 +201,10 @@ const AuthForm = ({ onSuccess }) => {
 
           <p className="auth-switch-text">
             ¿No tienes cuenta?{" "}
-            <span className="auth-switch-link" onClick={() => irARegistro(loginData.correo)}>
+            <span
+              className="auth-switch-link"
+              onClick={() => irARegistro(loginData.correo)}
+            >
               Regístrate
             </span>
           </p>
@@ -186,10 +219,13 @@ const AuthForm = ({ onSuccess }) => {
                 type="text"
                 required
                 value={registroData.nombre}
-                onChange={(e) => setRegistroData({ ...registroData, nombre: e.target.value })}
+                onChange={(e) =>
+                  setRegistroData({ ...registroData, nombre: e.target.value })
+                }
                 placeholder="Juan"
               />
             </div>
+
             <div className="auth-field">
               <label htmlFor="reg-apellido">Apellido</label>
               <input
@@ -197,7 +233,9 @@ const AuthForm = ({ onSuccess }) => {
                 type="text"
                 required
                 value={registroData.apellido}
-                onChange={(e) => setRegistroData({ ...registroData, apellido: e.target.value })}
+                onChange={(e) =>
+                  setRegistroData({ ...registroData, apellido: e.target.value })
+                }
                 placeholder="Pérez"
               />
             </div>
@@ -210,7 +248,9 @@ const AuthForm = ({ onSuccess }) => {
               type="email"
               required
               value={registroData.correo}
-              onChange={(e) => setRegistroData({ ...registroData, correo: e.target.value })}
+              onChange={(e) =>
+                setRegistroData({ ...registroData, correo: e.target.value })
+              }
               placeholder="ejemplo@correo.com"
             />
           </div>
@@ -223,7 +263,9 @@ const AuthForm = ({ onSuccess }) => {
               min="1"
               max="120"
               value={registroData.edad}
-              onChange={(e) => setRegistroData({ ...registroData, edad: e.target.value })}
+              onChange={(e) =>
+                setRegistroData({ ...registroData, edad: e.target.value })
+              }
               placeholder="20"
             />
           </div>
@@ -236,10 +278,13 @@ const AuthForm = ({ onSuccess }) => {
                 type="password"
                 required
                 value={registroData.password}
-                onChange={(e) => setRegistroData({ ...registroData, password: e.target.value })}
+                onChange={(e) =>
+                  setRegistroData({ ...registroData, password: e.target.value })
+                }
                 placeholder="********"
               />
             </div>
+
             <div className="auth-field">
               <label htmlFor="reg-confirmar">Confirmar</label>
               <input
@@ -247,7 +292,9 @@ const AuthForm = ({ onSuccess }) => {
                 type="password"
                 required
                 value={registroData.confirmar}
-                onChange={(e) => setRegistroData({ ...registroData, confirmar: e.target.value })}
+                onChange={(e) =>
+                  setRegistroData({ ...registroData, confirmar: e.target.value })
+                }
                 placeholder="********"
               />
             </div>
