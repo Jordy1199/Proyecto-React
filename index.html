@@ -12,5 +12,20 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+  Object.keys(localStorage).forEach(key => {
+    if (key.includes('zapier') || key.includes('chatbot')) {
+      localStorage.removeItem(key);
+    }
+  });
+  Object.keys(sessionStorage).forEach(key => {
+    if (key.includes('zapier') || key.includes('chatbot')) {
+      sessionStorage.removeItem(key);
+    }
+  });
+</script>
+    <script async type='module' src='https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js'></script>
+    <zapier-interfaces-chatbot-embed is-popup='true' chatbot-id='cmrvm8zuy001912nes3c9yzkb'></zapier-interfaces-chatbot-embed>
   </body>
 </html>
