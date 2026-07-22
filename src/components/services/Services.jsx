@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import { toast } from 'react-toastify';
 import './Services.css';
 
 // Parche obligatorio para iconos de Leaflet en entornos React + Vite
@@ -21,16 +22,14 @@ export default function Services() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
 
-  // Detector de scroll infinito (entra y sale de pantalla)
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Al quitar el "unobserve", esto se activará en TRUE al entrar y en FALSE al salir de pantalla
         setIsVisible(entry.isIntersecting);
       },
       { 
-        threshold: 0.15, // Se activa cuando el 15% de la sección entra o sale de pantalla
-        rootMargin: "0px 0px -50px 0px" // Margen sutil para que el reinicio se sienta natural
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
       }
     );
 
@@ -69,6 +68,12 @@ export default function Services() {
     }
   ];
 
+  const manejarClickServicio = (servicio) => {
+    if (servicio.id === 3) {
+      toast.info("Aún no se calculan las rutas de accesibilidad");
+    }
+  };
+
   return (
     <section 
       ref={sectionRef} 
@@ -76,7 +81,6 @@ export default function Services() {
     >
       <div className="services-container">
         
-        {/* LADO IZQUIERDO: Contenido y tarjetas */}
         <div className="services-info-side">
           <span className="services-subtitle anim-item-1">Servicios e Infraestructura</span>
           <h2 className="services-title anim-item-2">EPN Accesible</h2>
@@ -90,6 +94,7 @@ export default function Services() {
                 key={servicio.id} 
                 className="service-compact-card anim-card"
                 style={{ '--card-index': index }}
+                onClick={() => manejarClickServicio(servicio)}
               >
                 <div className={`card-icon-container ${servicio.claseColor}`}>
                   <i className={servicio.iconoClass}></i>
@@ -103,7 +108,6 @@ export default function Services() {
           </div>
         </div>
 
-        {/* LADO DERECHO: El mapa compacto */}
         <div className="services-map-side anim-map">
           <div className="services-map-wrapper">
             <MapContainer 

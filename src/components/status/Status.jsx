@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import {
   cuposDisponibles,
   reservasActivas,
@@ -22,12 +23,27 @@ const Status = () => {
   const ocupados = total - disponibles;
   const activas = reservasActivas(reservas).length;
 
+  const mostrarDisponibles = () => {
+    toast.info(`Hay ${disponibles} espacios disponibles en este momento.`);
+  };
+
+  const mostrarOcupados = () => {
+    toast.warning(`Actualmente hay ${ocupados} espacios ocupados.`);
+  };
+
+  const mostrarActivas = () => {
+    toast.info(`Tienes ${activas} reservas activas registradas.`);
+  };
+
   return (
     <section className="section status-section" data-aos="fade-up">
       <h2 className="section-title">Estado general</h2>
 
       <div className="status-grid">
-        <div className="status-card interactive">
+        <div
+          className="status-card interactive"
+          onClick={mostrarDisponibles}
+        >
           <div className="status-icon icon-green">
             <i className="fa-solid fa-wheelchair"></i>
           </div>
@@ -39,7 +55,7 @@ const Status = () => {
           </div>
         </div>
 
-        <div className="status-card interactive">
+        <div className="status-card interactive" onClick={mostrarOcupados}>
           <div className="status-icon icon-red">
             <i className="fa-solid fa-wheelchair"></i>
           </div>
@@ -51,7 +67,7 @@ const Status = () => {
           </div>
         </div>
 
-        <div className="status-card interactive">
+        <div className="status-card interactive" onClick={mostrarActivas}>
           <div className="status-icon icon-blue">
             <i className="fa-regular fa-calendar-days"></i>
           </div>

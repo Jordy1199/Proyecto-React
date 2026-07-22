@@ -95,7 +95,7 @@ function Footer() {
             <h4 className="footer__col-title">Equipo</h4>
             <ul className="footer__list footer__list--plain">
               <li>Gregory Araujo</li>
-              <li>Jhonathan Gualcapiña</li>
+              <li>Jhonatan Guacapiña</li>
               <li>Cristhian Veliz</li>
               <li>Jordy Cajas</li>
             </ul>

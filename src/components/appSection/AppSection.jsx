@@ -11,7 +11,7 @@ const AppSection = () => {
       </div>
 
       <div className="mobile" data-aos="fade-left" data-aos-delay="200">
-        <span className="mobile__label">📱 Disponible ahora</span>
+        <span className="mobile__label"> Disponible ahora</span>
         <h2 className="mobile__title">
           Descarga <span>EPN Accesible</span>
         </h2>
@@ -22,14 +22,14 @@ const AppSection = () => {
           parqueaderos, rutas inclusivas y ascensores.
         </p>
         <div className="mobile__buttons">
-          <a href="#" className="store-btn">
+          <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" className="store-btn">
             <img src="/images/app1.jpeg" alt="App Store" className="store-btn__logo" />
             <div className="store-btn__text">
               <span className="store-btn__sub">Disponible en</span>
               <span className="store-btn__name">App Store</span>
             </div>
           </a>
-          <a href="#" className="store-btn">
+          <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" className="store-btn">
             <img src="/images/app2.jpg" alt="Google Play" className="store-btn__logo" />
             <div className="store-btn__text">
               <span className="store-btn__sub">Disponible en</span>

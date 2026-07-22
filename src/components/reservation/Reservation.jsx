@@ -10,6 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { db } from "../../firebase/firebaseConfig";
 import { cuposDisponibles, espacios } from "../../data/spaces";
@@ -35,8 +36,6 @@ const Reservation = () => {
 
   const [misReservas, setMisReservas] = useState([]);
   const [guardando, setGuardando] = useState(false);
-  const [mensaje, setMensaje] = useState("");
-  const [error, setError] = useState("");
 
   const espacioSeleccionado = espacios.find(
     (espacio) => espacio.id === formulario.espacioId
@@ -80,16 +79,13 @@ const Reservation = () => {
   const guardarReserva = async (e) => {
     e.preventDefault();
 
-    setMensaje("");
-    setError("");
-
     if (formulario.fin <= formulario.inicio) {
-      setError("La hora de fin debe ser posterior a la hora de inicio.");
+      toast.error("La hora de fin debe ser posterior a la hora de inicio.");
       return;
     }
 
     if (!espacioSeleccionado || disponibles <= 0) {
-      setError("Ya no hay cupos disponibles para este tipo de espacio.");
+      toast.error("Ya no hay cupos disponibles para este tipo de espacio.");
       return;
     }
 
@@ -112,7 +108,7 @@ const Reservation = () => {
         creadoEn: serverTimestamp(),
       });
 
-      setMensaje("Reserva registrada correctamente.");
+      toast.success("Espacio reservado correctamente.");
 
       setFormulario({
         ...formulario,
@@ -120,23 +116,19 @@ const Reservation = () => {
       });
     } catch (err) {
       console.error(err);
-      setError("No se pudo guardar la reserva.");
+      toast.error("No se pudo reservar el espacio.");
     } finally {
       setGuardando(false);
     }
   };
 
   const cancelarReserva = async (id) => {
-    setMensaje("");
-    setError("");
-
     try {
-      // Elimina el documento: el cupo vuelve a estar disponible.
       await deleteDoc(doc(db, "reservas", id));
-      setMensaje("Reserva cancelada. El cupo fue liberado.");
+      toast.success("Ha cancelado el espacio");
     } catch (err) {
       console.error(err);
-      setError("No se pudo cancelar la reserva.");
+      toast.error("No se pudo cancelar.");
     }
   };
 
@@ -236,9 +228,6 @@ const Reservation = () => {
         <p className="reservation-message">
           Cupos disponibles para este tipo: <b>{disponibles}</b> de 10
         </p>
-
-        {mensaje && <p className="reservation-message success">{mensaje}</p>}
-        {error && <p className="reservation-message error">{error}</p>}
 
         <button
           type="submit"
