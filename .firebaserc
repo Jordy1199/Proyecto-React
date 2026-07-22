@@ -1,5 +1,9 @@
 {
   "projects": {
+<<<<<<< HEAD
     "default": "proyecto-fccb7"
+=======
+    "default": "epn-accesible-6631f"
+>>>>>>> f365ec72758bc242b8011791df273b565d2d8dc2
   }
 }

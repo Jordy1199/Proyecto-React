@@ -21,7 +21,6 @@ function InfoTabs() {
           <Tab className="custom-tab" selectedClassName="custom-tab--selected">Nuestro Objetivo</Tab>
         </TabList>
 
-        {/* SOLUCIÓN: Agregada la propiedad selectedClassName a cada TabPanel */}
         <TabPanel className="custom-tab-panel" selectedClassName="custom-tab-panel--selected">
           <div className="tab-content animate-fade-in">
             <h3>Gestión Digital de la ESFOT</h3>
