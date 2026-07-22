@@ -1,3 +1,15 @@
+.tabs-section {
+    width: 100%;
+}
+
+.section-title {
+    color: var(--epn-blue);
+    font-size: clamp(1.8rem, 2.5vw + 1rem, 2.4rem);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
 .custom-tabs {
     display: flex;
     flex-direction: column;
@@ -19,6 +31,7 @@
     display: none;
 }
 
+/* Efectos de Hover interactivos (estilo Services) */
 .custom-tab {
     padding: 14px 22px;
     cursor: pointer;
@@ -26,14 +39,20 @@
     font-weight: 600;
     color: var(--text-light);
     border-bottom: 3px solid transparent;
-    transition: all var(--transition-speed);
+    transition: all var(--transition-speed, 0.3s) ease;
     white-space: nowrap;
+    outline: none !important;
 }
 
 .custom-tab:hover {
     color: var(--epn-blue);
-    background-color: var(--bg-main);
+    background-color: var(--bg-main, #f8fafc);
     border-radius: 8px 8px 0 0;
+    transform: translateY(-2px); /* Pequeña elevación al pasar el mouse */
+}
+
+.custom-tab:focus {
+    outline: none !important;
 }
 
 .custom-tab--selected {
@@ -67,6 +86,7 @@
     margin: 0;
 }
 
+/* Tarjetas de estadísticas con efecto Hover suave */
 .about-stats {
     display: grid;
     grid-template-columns: 1fr;
@@ -81,6 +101,12 @@
     background-color: #f8fafc;
     border-radius: 10px;
     border: 1px solid var(--border-gray);
+    transition: transform var(--transition-speed, 0.3s) ease, box-shadow var(--transition-speed, 0.3s) ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.06));
 }
 
 .stat-value {
@@ -97,8 +123,20 @@
     font-weight: 500;
 }
 
+/* Animación Fade-In fluida para el contenido al cambiar de pestaña */
 .animate-fade-in {
     animation: fadeInTab 0.35s ease-out forwards;
+}
+
+@keyframes fadeInTab {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (min-width: 680px) {

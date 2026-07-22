@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import './Gallery.css';
@@ -6,15 +7,82 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
+// Lista de fotos con sus detalles
+const galleryData = [
+  {
+    id: 7,
+    src: '/images/img7.jpeg',
+    title: 'Facultad Ingenieria Civil',
+    description: 'Facilita la movilidad en silla de ruedas.'
+  },
+  {
+    id: 8,
+    src: '/images/img8.jpeg',
+    title: 'Facultad Ingenieria Civil',
+    description: 'Espacios señalizados y reservados cerca de las aulas para estudiantes con movilidad reducida.'
+  },
+  {
+    id: 9,
+    src: '/images/img9.jpeg',
+    title: 'Biblioteca General',
+    description: 'Rutas libres de obstáculos diseñadas para un tránsito seguro en el campus.'
+  },
+  {
+    id: 10,
+    src: '/images/img10.jpeg',
+    title: 'Facultad de Ciencias',
+    description: 'Acceso directo con rampas de pendiente baja e iluminación adecuada.'
+  },
+  {
+    id: 11,
+    src: '/images/img11.jpeg',
+    title: 'Edificio de Formacion Basica',
+    description: 'Paneles informativos con alto contraste y pictogramas accesibles.'
+  },
+  {
+    id: 12,
+    src: '/images/img12.jpeg',
+    title: 'Facultad Ingenieria Electrica / Electronica',
+    description: 'Puertas amplias y niveles adaptados para facilitar el ingreso a zonas prácticas.'
+  },
+  {
+    id: 13,
+    src: '/images/img13.jpeg',
+    title: 'Facultad Ingenieria Mecanica',
+    description: 'Espacios de permanencia accesibles cerca de las zonas académicas.'
+  },
+  {
+    id: 14,
+    src: '/images/img14.jpeg',
+    title: 'Facultad Ciencias Administrativas',
+    description: 'Elevador prioritario equipado con botones a altura accesible.'
+  },
+  {
+    id: 15,
+    src: '/images/img15.jpeg',
+    title: 'ESFOT',
+    description: 'Camino con baldosa podotáctil y pasamanos de doble altura.'
+  },
+  {
+    id: 16,
+    src: '/images/img16.jpeg',
+    title: 'Facultad Ingenieria de Sitemas',
+    description: 'Acceso a comedor y asociacion FIS'
+  }
+];
+
 const Gallery = () => {
+  // Estado para la imagen seleccionada en el modal
+  const [selectedImage, setSelectedImage] = useState(null);
+
   return (
     <section className="gallery section gallery-section" data-aos="zoom-in">
       <h3 className="gallery__title">Galería</h3>
-      <p className="gallery__description">Espacios accesibles del campus.</p>
+      <p className="gallery__description">Espacios accesibles del campus (haz clic en una imagen para ver detalles).</p>
       
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        autoplay={{ delay: 3000 }}
+        autoplay={{ delay: 3500, disableOnInteraction: false }}
         navigation
         pagination={{ clickable: true }}
         loop={true}
@@ -26,16 +94,33 @@ const Gallery = () => {
         }}
         className="gallery__swiper"
       >
-        <SwiperSlide>
-          <img src="/images/im1.jpg" alt="Imagen 1" className="gallery-img" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="/images/im2.jpg" alt="Imagen 2" className="gallery-img" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="/images/im3.jpg" alt="Imagen 3" className="gallery-img" />
-        </SwiperSlide>
+        {galleryData.map((item) => (
+          <SwiperSlide key={item.id}>
+            <div className="gallery-card" onClick={() => setSelectedImage(item)}>
+              <img src={item.src} alt={item.title} className="gallery-img" />
+              <div className="gallery-overlay">
+                <span> Ver detalle</span>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
+
+      {/* Ventana Modal al hacer Clic */}
+      {selectedImage && (
+        <div className="gallery-modal" onClick={() => setSelectedImage(null)}>
+          <div className="gallery-modal__content" onClick={(e) => e.stopPropagation()}>
+            <button className="gallery-modal__close" onClick={() => setSelectedImage(null)}>
+              &times;
+            </button>
+            <img src={selectedImage.src} alt={selectedImage.title} className="gallery-modal__img" />
+            <div className="gallery-modal__info">
+              <h4>{selectedImage.title}</h4>
+              <p>{selectedImage.description}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
