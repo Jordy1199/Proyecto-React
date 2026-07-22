@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   onSnapshot,
   query,
   serverTimestamp,
@@ -12,7 +13,12 @@ import {
 import { useLocation } from "react-router-dom";
 
 import { db } from "../../firebase/firebaseConfig";
-import { cuposDisponibles, espacios } from "../../data/spaces";
+import {
+  cuposDisponibles,
+  espacios,
+  fechaLocalActual,
+  reservaVencida,
+} from "../../data/spaces";
 import { useAuth } from "../../hooks/useAuth";
 import { useReservations } from "../../hooks/useReservations";
 import "./Reservation.css";
@@ -22,7 +28,7 @@ const Reservation = () => {
   const location = useLocation();
   const { reservas: todasLasReservas } = useReservations();
 
-  const hoy = new Date().toISOString().split("T")[0];
+  const hoy = fechaLocalActual();
 
   const [formulario, setFormulario] = useState({
     fecha: hoy,
@@ -43,7 +49,7 @@ const Reservation = () => {
   );
 
   const disponibles = espacioSeleccionado
-    ? cuposDisponibles(espacioSeleccionado.tipo, todasLasReservas)
+    ? cuposDisponibles(espacioSeleccionado.tipo, todasLasReservas, formulario)
     : 0;
 
   useEffect(() => {
@@ -54,20 +60,44 @@ const Reservation = () => {
       where("usuarioId", "==", user.uid)
     );
 
+    let reservasActuales = [];
+
+    const limpiarReservasVencidas = async () => {
+      const vencidas = reservasActuales.filter(reservaVencida);
+
+      if (vencidas.length === 0) return;
+
+      try {
+        await Promise.all(
+          vencidas.map((reserva) => deleteDoc(doc(db, "reservas", reserva.id)))
+        );
+      } catch (err) {
+        console.error("No se pudieron eliminar las reservas vencidas:", err);
+      }
+    };
+
     const cancelarEscucha = onSnapshot(consulta, (snapshot) => {
       const datos = snapshot.docs.map((documento) => ({
         id: documento.id,
         ...documento.data(),
       }));
 
+      reservasActuales = datos;
+
       datos.sort((a, b) =>
         `${b.fecha} ${b.inicio}`.localeCompare(`${a.fecha} ${a.inicio}`)
       );
 
-      setMisReservas(datos);
+      setMisReservas(datos.filter((reserva) => !reservaVencida(reserva)));
+      void limpiarReservasVencidas();
     });
 
-    return () => cancelarEscucha();
+    const limpiezaProgramada = window.setInterval(limpiarReservasVencidas, 60000);
+
+    return () => {
+      cancelarEscucha();
+      window.clearInterval(limpiezaProgramada);
+    };
   }, [user]);
 
   const cambiarCampo = (e) => {
@@ -88,6 +118,19 @@ const Reservation = () => {
       return;
     }
 
+    if (formulario.fecha < hoy) {
+      setError("No puedes reservar una fecha anterior a hoy.");
+      return;
+    }
+
+    if (
+      formulario.fecha === hoy &&
+      formulario.inicio <= new Date().toTimeString().slice(0, 5)
+    ) {
+      setError("La hora de inicio debe ser posterior a la hora actual.");
+      return;
+    }
+
     if (!espacioSeleccionado || disponibles <= 0) {
       setError("Ya no hay cupos disponibles para este tipo de espacio.");
       return;
@@ -96,6 +139,33 @@ const Reservation = () => {
     setGuardando(true);
 
     try {
+      const reservasEnLaFecha = query(
+        collection(db, "reservas"),
+        where("fecha", "==", formulario.fecha)
+      );
+
+      const snapshot = await getDocs(reservasEnLaFecha);
+      const existeCruce = snapshot.docs.some((documento) => {
+        const reserva = documento.data();
+        const mismoEspacio =
+          reserva.espacioId === espacioSeleccionado.id ||
+          reserva.espacio === espacioSeleccionado.nombre;
+
+        return (
+          reserva.estado === "activa" &&
+          mismoEspacio &&
+          reserva.inicio < formulario.fin &&
+          reserva.fin > formulario.inicio
+        );
+      });
+
+      if (existeCruce) {
+        setError(
+          "Este espacio ya tiene una reserva que se cruza con el horario seleccionado."
+        );
+        return;
+      }
+
       await addDoc(collection(db, "reservas"), {
         usuarioId: user.uid,
         usuarioNombre:
@@ -104,6 +174,7 @@ const Reservation = () => {
         fecha: formulario.fecha,
         inicio: formulario.inicio,
         fin: formulario.fin,
+        espacioId: espacioSeleccionado.id,
         espacio: espacioSeleccionado.nombre,
         tipo: espacioSeleccionado.tipo,
         discapacidad: formulario.discapacidad,
@@ -120,7 +191,7 @@ const Reservation = () => {
       });
     } catch (err) {
       console.error(err);
-      setError("No se pudo guardar la reserva.");
+      setError(err.message || "No se pudo guardar la reserva.");
     } finally {
       setGuardando(false);
     }
@@ -229,6 +300,7 @@ const Reservation = () => {
               value={formulario.observaciones}
               onChange={cambiarCampo}
               placeholder="Ej.: Uso silla de ruedas"
+              maxLength={200}
             />
           </label>
         </div>

@@ -44,17 +44,38 @@ export const tipoDeReserva = (reserva) => {
   return espacio?.tipo || null;
 };
 
-export const reservasActivas = (reservas) =>
-  reservas.filter((reserva) => reserva.estado === "activa");
+export const fechaLocalActual = () => {
+  const fecha = new Date();
+  const year = fecha.getFullYear();
+  const month = String(fecha.getMonth() + 1).padStart(2, "0");
+  const day = String(fecha.getDate()).padStart(2, "0");
 
-export const cuposDisponibles = (tipoId, reservas) => {
+  return `${year}-${month}-${day}`;
+};
+
+export const reservaVencida = (reserva) => reserva.fecha < fechaLocalActual();
+
+export const reservasActivas = (reservas) =>
+  reservas.filter(
+    (reserva) => reserva.estado === "activa" && !reservaVencida(reserva)
+  );
+
+export const cuposDisponibles = (tipoId, reservas, periodo = null) => {
   const tipo = tiposEspacio.find((item) => item.id === tipoId);
 
   if (!tipo) return 0;
 
-  const ocupados = reservasActivas(reservas).filter(
-    (reserva) => tipoDeReserva(reserva) === tipoId
-  ).length;
+  const ocupados = reservasActivas(reservas).filter((reserva) => {
+    if (tipoDeReserva(reserva) !== tipoId) return false;
+
+    if (!periodo) return true;
+
+    return (
+      reserva.fecha === periodo.fecha &&
+      reserva.inicio < periodo.fin &&
+      reserva.fin > periodo.inicio
+    );
+  }).length;
 
   return Math.max(tipo.capacidad - ocupados, 0);
 };
