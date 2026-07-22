@@ -7,6 +7,8 @@
   --blue-reserved: #3b82f6;
   --bg-main: #f4f7f6;
   --bg-white: #ffffff;
+  --surface-muted: #f8fafc;
+  --surface-hover: #f8fafc;
   --border-gray: #e2e8f0;
   --text-main: #334155;
   --text-light: #64748b;
@@ -27,6 +29,28 @@
   --pad-section: clamp(1rem, 2vw + 0.8rem, 2.5rem);
   --gap-main: clamp(1rem, 2.5vw + 0.5rem, 2rem);
   --max-w-container: 1600px;
+}
+
+:root[data-theme="dark"] {
+  --epn-blue: #2563eb;
+  --epn-blue-hover: #1d4ed8;
+  --green-available: #34d399;
+  --green-light: #123c34;
+  --red-occupied: #fb7185;
+  --blue-reserved: #60a5fa;
+  --bg-main: #0b1220;
+  --bg-white: #151f2e;
+  --surface-muted: #1b293c;
+  --surface-hover: #233653;
+  --border-gray: #30445c;
+  --text-main: #edf4ff;
+  --text-light: #a9b8c9;
+  --text-accent: #75baff;
+  --shadow-sm: 0 6px 14px -4px rgba(0, 0, 0, 0.42),
+    0 2px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 16px 28px -8px rgba(0, 0, 0, 0.5),
+    0 6px 12px -4px rgba(37, 99, 235, 0.16);
+  color-scheme: dark;
 }
 
 *,
@@ -113,8 +137,8 @@ body {
 }
 
 .interactive-row:hover {
-  background-color: #f8fafc;
-  border-color: #cbd5e1;
+  background-color: var(--surface-hover);
+  border-color: var(--border-gray);
 }
 
 .interactive-btn {
@@ -129,6 +153,68 @@ body {
 
 .interactive-btn:active {
   transform: scale(0.985);
+}
+
+:root[data-theme="dark"] .search-type-card {
+  background: linear-gradient(135deg, var(--bg-white), var(--surface-muted));
+}
+
+:root[data-theme="dark"] .section-title,
+:root[data-theme="dark"] .gallery__title,
+:root[data-theme="dark"] .type-icon,
+:root[data-theme="dark"] .filter-icon,
+:root[data-theme="dark"] .search-type-icon,
+:root[data-theme="dark"] .search-type-content h3,
+:root[data-theme="dark"] .my-reservations h3,
+:root[data-theme="dark"] .tab-content h3,
+:root[data-theme="dark"] .stat-value,
+:root[data-theme="dark"] .auth-title,
+:root[data-theme="dark"] .route-loading,
+:root[data-theme="dark"] .gallery-modal__info h4,
+:root[data-theme="dark"] .custom-tab--selected,
+:root[data-theme="dark"] .custom-tab:hover {
+  color: var(--text-accent);
+}
+
+:root[data-theme="dark"] .custom-tab--selected {
+  border-bottom-color: var(--text-accent);
+}
+
+:root[data-theme="dark"] .search-show-all-btn,
+:root[data-theme="dark"] .reservation-record button,
+:root[data-theme="dark"] .stat-item,
+:root[data-theme="dark"] .auth-message-error,
+:root[data-theme="dark"] .gallery-modal__content,
+:root[data-theme="dark"] .custom-popup .leaflet-popup-content-wrapper {
+  background-color: var(--bg-white);
+}
+
+:root[data-theme="dark"] .services-section {
+  --epn-bg-light: var(--surface-muted);
+  --epn-border-color: var(--border-gray);
+  --epn-text-main: var(--text-main);
+  --epn-text-muted: var(--text-light);
+  background-color: var(--bg-white);
+}
+
+:root[data-theme="dark"] .service-compact-card:hover {
+  background-color: var(--surface-hover);
+}
+
+:root[data-theme="dark"] .search-show-all-btn {
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+}
+
+:root[data-theme="dark"] .auth-message-error {
+  color: #ff8d8d;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  background-color: var(--bg-white);
+  color: var(--text-main);
 }
 
 @media (min-width: 1024px) {

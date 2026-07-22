@@ -4,6 +4,7 @@ import Typed from "typed.js";
 import { motion } from "framer-motion";
 
 import { useAuth } from "../../hooks/useAuth";
+import { useTheme } from "../../hooks/useTheme";
 import "./Header.css";
 
 const navItems = [
@@ -27,6 +28,7 @@ const Header = () => {
   const typedTarget = useRef(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const { user, perfil, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const typed = new Typed(typedTarget.current, {
@@ -112,6 +114,17 @@ const Header = () => {
               <span>{item.label}</span>
             </NavLink>
           ))}
+
+          <button
+            className="header-nav-link header-theme-toggle"
+            type="button"
+            onClick={toggleTheme}
+            title={theme === "light" ? "Activar modo oscuro" : "Activar modo claro"}
+            aria-label={theme === "light" ? "Activar modo oscuro" : "Activar modo claro"}
+          >
+            <i className={theme === "light" ? "fa-solid fa-moon" : "fa-solid fa-sun"}></i>
+            <span>{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
+          </button>
 
           {user && (
             <div className="header-user-info header-nav-user" title={user.email}>

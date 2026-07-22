@@ -162,3 +162,15 @@
     width: 340px;
   }
 }
+
+@media (max-width: 480px) {
+  .reservation-record {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .reservation-record button {
+    align-self: flex-start;
+  }
+}
