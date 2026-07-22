@@ -14,8 +14,8 @@ const HomePage = () => {
       <Search />
       <InfoTabs />
       <Services />
-      <AppSection />
       <Gallery />
+      <AppSection />
     </main>
   );
 };
