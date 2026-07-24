@@ -169,9 +169,13 @@
 }
 
 .search-reserve-btn {
+  align-items: center;
   background-color: var(--epn-blue);
   border: none;
   color: white;
+  display: inline-flex;
+  gap: 10px;
+  justify-content: center;
 }
 
 .search-reserve-btn:hover:not(:disabled) {

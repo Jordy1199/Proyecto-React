@@ -96,12 +96,23 @@ const Gallery = () => {
       >
         {galleryData.map((item) => (
           <SwiperSlide key={item.id}>
-            <div className="gallery-card" onClick={() => setSelectedImage(item)}>
-              <img src={item.src} alt={item.title} className="gallery-img" />
+            <button
+              type="button"
+              className="gallery-card"
+              onClick={() => setSelectedImage(item)}
+              aria-label={`Ver detalle de ${item.title}`}
+            >
+              <img
+                src={item.src}
+                alt={item.title}
+                className="gallery-img"
+                loading={item.id === 7 ? "eager" : "lazy"}
+                decoding="async"
+              />
               <div className="gallery-overlay">
                 <span> Ver detalle</span>
               </div>
-            </div>
+            </button>
           </SwiperSlide>
         ))}
       </Swiper>
@@ -109,13 +120,24 @@ const Gallery = () => {
       {/* Ventana Modal al hacer Clic */}
       {selectedImage && (
         <div className="gallery-modal" onClick={() => setSelectedImage(null)}>
-          <div className="gallery-modal__content" onClick={(e) => e.stopPropagation()}>
-            <button className="gallery-modal__close" onClick={() => setSelectedImage(null)}>
+          <div
+            className="gallery-modal__content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="gallery-modal-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="gallery-modal__close"
+              onClick={() => setSelectedImage(null)}
+              aria-label="Cerrar detalle"
+            >
               &times;
             </button>
-            <img src={selectedImage.src} alt={selectedImage.title} className="gallery-modal__img" />
+            <img src={selectedImage.src} alt={selectedImage.title} className="gallery-modal__img" decoding="async" />
             <div className="gallery-modal__info">
-              <h4>{selectedImage.title}</h4>
+              <h4 id="gallery-modal-title">{selectedImage.title}</h4>
               <p>{selectedImage.description}</p>
             </div>
           </div>

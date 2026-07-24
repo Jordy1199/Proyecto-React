@@ -155,6 +155,22 @@ body {
   transform: scale(0.985);
 }
 
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--blue-reserved);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
 :root[data-theme="dark"] .search-type-card {
   background: linear-gradient(135deg, var(--bg-white), var(--surface-muted));
 }

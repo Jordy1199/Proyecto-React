@@ -70,9 +70,9 @@
   display: flex;
   font-size: 1rem;
   font-weight: 700;
-  gap: 12px;
+  column-gap: 20px;
   justify-content: center;
-  padding: 18px;
+  padding: 20px;
   width: 100%;
 }
 
@@ -167,9 +167,6 @@
     grid-template-columns: repeat(4, 1fr);
   }
 
-  .btn-reservar {
-    width: 340px;
-  }
 }
 
 @media (max-width: 480px) {

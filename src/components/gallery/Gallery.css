@@ -6,7 +6,7 @@
   max-width: 100%;
   margin: 0 auto 2rem auto;
   padding: 2rem;
-  background-color: #172031; /* Mismo fondo de las tarjetas del dashboard */
+  background-color: #172031;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
@@ -39,12 +39,17 @@
 }
 
 .gallery-card {
-  position: relative;
+  border: 0;
   border-radius: 12px;
+  display: block;
+  font: inherit;
   overflow: hidden;
   height: 220px;
+  padding: 0;
+  position: relative;
   cursor: pointer;
   background-color: #0f172a;
+  width: 100%;
 }
 
 .gallery-img {
@@ -82,6 +87,43 @@
 
 .gallery-card:hover .gallery-overlay {
   opacity: 1;
+}
+
+:root[data-theme="light"] .gallery-section {
+  background-color: var(--bg-white);
+  border-color: var(--border-gray);
+  box-shadow: var(--shadow-sm);
+}
+
+:root[data-theme="light"] .gallery__title {
+  color: var(--epn-blue);
+}
+
+:root[data-theme="light"] .gallery__description {
+  color: var(--text-light);
+}
+
+:root[data-theme="light"] .gallery-card,
+:root[data-theme="light"] .gallery-modal__img {
+  background-color: var(--surface-muted);
+}
+
+:root[data-theme="light"] .gallery-overlay {
+  background: rgba(0, 45, 93, 0.52);
+}
+
+:root[data-theme="light"] .gallery-modal__content,
+:root[data-theme="light"] .gallery-modal__info {
+  background-color: var(--bg-white);
+  border-color: var(--border-gray);
+}
+
+:root[data-theme="light"] .gallery-modal__info h4 {
+  color: var(--text-main);
+}
+
+:root[data-theme="light"] .gallery-modal__info p {
+  color: var(--text-light);
 }
 
 /* ==========================================
@@ -167,6 +209,17 @@
   color: #94a3b8;
   font-size: 0.9rem;
   line-height: 1.45;
+}
+
+.gallery-card:focus-visible {
+  outline: 3px solid var(--blue-reserved);
+  outline-offset: 3px;
+}
+
+@media (hover: none) {
+  .gallery-overlay {
+    opacity: 1;
+  }
 }
 
 /* Ajuste dinámico para pantallas/móviles con poco alto */
