@@ -119,15 +119,6 @@ body {
   text-align: center;
 }
 
-.deferred-full-width {
-  width: 100%;
-}
-
-@media (min-width: 1024px) {
-  .deferred-full-width {
-    grid-column: 1 / -1;
-  }
-}
 
 .interactive {
   cursor: pointer;

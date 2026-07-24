@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
+import Chart from "chart.js/auto";
 
 import { tipoDeReserva, tiposEspacio } from "../../data/spaces";
 import { useReservations } from "../../hooks/useReservations";
@@ -80,13 +81,7 @@ const Statistics = () => {
       },
     };
 
-    let cancelled = false;
-
-    const createChart = async () => {
-      const { default: Chart } = await import("chart.js/auto");
-      if (cancelled || !canvasRef.current) return;
-
-      chartRef.current = new Chart(canvasRef.current, {
+    chartRef.current = new Chart(canvasRef.current, {
       type: "doughnut",
       data: {
         labels: estadisticas.map((tipo) => tipo.nombre),
@@ -128,13 +123,9 @@ const Statistics = () => {
           },
         },
       },
-      });
-    };
-
-    createChart();
+    });
 
     return () => {
-      cancelled = true;
       chartRef.current?.destroy();
       chartRef.current = null;
     };

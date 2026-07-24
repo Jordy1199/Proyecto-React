@@ -2,10 +2,10 @@ import { Suspense, lazy } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import MainLayout from "../layout/MainLayout";
+import HomePage from "../pages/HomePage";
 import "../pages/pages.css";
 import ProtectedRoute from "./ProtectedRoute";
 
-const HomePage = lazy(() => import("../pages/HomePage"));
 const ServicesPage = lazy(() => import("../pages/ServicesPage"));
 const GalleryPage = lazy(() => import("../pages/GalleryPage"));
 const TypesPage = lazy(() => import("../pages/TypesPage"));

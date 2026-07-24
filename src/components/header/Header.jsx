@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
+import Typed from "typed.js";
 
 import { useAuth } from "../../hooks/useAuth";
 import { useTheme } from "../../hooks/useTheme";
@@ -29,27 +30,17 @@ const Header = () => {
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
-    let typed;
-    let cancelled = false;
-
-    import("typed.js").then(({ default: Typed }) => {
-      if (cancelled || !typedTarget.current) return;
-
-      typed = new Typed(typedTarget.current, {
-        strings: ["EPN Accesible", "Gestión de Espacios"],
-        typeSpeed: 70,
-        backSpeed: 45,
-        backDelay: 1800,
-        loop: true,
-        showCursor: true,
-        cursorChar: "|",
-      });
+    const typed = new Typed(typedTarget.current, {
+      strings: ["EPN Accesible", "Gestión de Espacios"],
+      typeSpeed: 70,
+      backSpeed: 45,
+      backDelay: 1800,
+      loop: true,
+      showCursor: true,
+      cursorChar: "|",
     });
 
-    return () => {
-      cancelled = true;
-      typed?.destroy();
-    };
+    return () => typed.destroy();
   }, []);
 
   const cerrarMenu = () => setMenuAbierto(false);
