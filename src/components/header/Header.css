@@ -117,6 +117,11 @@
   border-color: rgba(255, 255, 255, 0.35);
 }
 
+.header-theme-toggle {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
 .header-nav-user {
   align-items: center;
   border-left: 1px solid rgba(255, 255, 255, 0.28);
@@ -185,7 +190,7 @@
   display: none;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1300px) {
   .header-container {
     z-index: 102;
   }
@@ -279,15 +284,14 @@
   .header-subtitle-text {
     display: none;
   }
-  .header-title-text > span:not(.typed-cursor) {
-  display: inline-block;
-  text-align: left;
-  width: 290px;
-}
 
-@media (max-width: 680px) {
   .header-title-text > span:not(.typed-cursor) {
-    width: 210px;
+    display: inline-block;
+    max-width: 210px;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
   }
-}
 }

@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   onSnapshot,
   query,
   serverTimestamp,
@@ -13,7 +14,12 @@ import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { db } from "../../firebase/firebaseConfig";
-import { cuposDisponibles, espacios } from "../../data/spaces";
+import {
+  cuposDisponibles,
+  espacios,
+  fechaLocalActual,
+  reservaVencida,
+} from "../../data/spaces";
 import { useAuth } from "../../hooks/useAuth";
 import { useReservations } from "../../hooks/useReservations";
 import "./Reservation.css";
@@ -23,7 +29,7 @@ const Reservation = () => {
   const location = useLocation();
   const { reservas: todasLasReservas } = useReservations();
 
-  const hoy = new Date().toISOString().split("T")[0];
+  const hoy = fechaLocalActual();
 
   const [formulario, setFormulario] = useState({
     fecha: hoy,
@@ -42,64 +48,186 @@ const Reservation = () => {
   );
 
   const disponibles = espacioSeleccionado
-    ? cuposDisponibles(espacioSeleccionado.tipo, todasLasReservas)
+    ? cuposDisponibles(
+        espacioSeleccionado.tipo,
+        todasLasReservas,
+        formulario
+      )
     : 0;
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setMisReservas([]);
+      return;
+    }
 
     const consulta = query(
       collection(db, "reservas"),
       where("usuarioId", "==", user.uid)
     );
 
-    const cancelarEscucha = onSnapshot(consulta, (snapshot) => {
-      const datos = snapshot.docs.map((documento) => ({
-        id: documento.id,
-        ...documento.data(),
-      }));
+    let reservasActuales = [];
 
-      datos.sort((a, b) =>
-        `${b.fecha} ${b.inicio}`.localeCompare(`${a.fecha} ${a.inicio}`)
-      );
+    const limpiarReservasVencidas = async () => {
+      const vencidas = reservasActuales.filter(reservaVencida);
 
-      setMisReservas(datos);
-    });
+      if (vencidas.length === 0) {
+        return;
+      }
 
-    return () => cancelarEscucha();
+      try {
+        await Promise.all(
+          vencidas.map((reserva) =>
+            deleteDoc(doc(db, "reservas", reserva.id))
+          )
+        );
+      } catch (err) {
+        console.error(
+          "No se pudieron eliminar las reservas vencidas:",
+          err
+        );
+      }
+    };
+
+    const cancelarEscucha = onSnapshot(
+      consulta,
+      (snapshot) => {
+        const datos = snapshot.docs.map((documento) => ({
+          id: documento.id,
+          ...documento.data(),
+        }));
+
+        reservasActuales = datos;
+
+        const reservasOrdenadas = [...datos].sort((a, b) =>
+          `${b.fecha} ${b.inicio}`.localeCompare(
+            `${a.fecha} ${a.inicio}`
+          )
+        );
+
+        setMisReservas(
+          reservasOrdenadas.filter(
+            (reserva) => !reservaVencida(reserva)
+          )
+        );
+
+        void limpiarReservasVencidas();
+      },
+      (err) => {
+        console.error("Error al consultar las reservas:", err);
+        toast.error("No se pudieron cargar tus reservas.");
+      }
+    );
+
+    const limpiezaProgramada = window.setInterval(
+      limpiarReservasVencidas,
+      60000
+    );
+
+    return () => {
+      cancelarEscucha();
+      window.clearInterval(limpiezaProgramada);
+    };
   }, [user]);
 
   const cambiarCampo = (e) => {
-    setFormulario({
-      ...formulario,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormulario((formularioAnterior) => ({
+      ...formularioAnterior,
+      [name]: value,
+    }));
   };
 
   const guardarReserva = async (e) => {
     e.preventDefault();
 
-    if (formulario.fin <= formulario.inicio) {
-      toast.error("La hora de fin debe ser posterior a la hora de inicio.");
+    if (!user) {
+      toast.error("Debes iniciar sesión para realizar una reserva.");
       return;
     }
 
-    if (!espacioSeleccionado || disponibles <= 0) {
-      toast.error("Ya no hay cupos disponibles para este tipo de espacio.");
+    if (formulario.fin <= formulario.inicio) {
+      toast.error(
+        "La hora de fin debe ser posterior a la hora de inicio."
+      );
+      return;
+    }
+
+    if (formulario.fecha < hoy) {
+      toast.error("No puedes reservar una fecha anterior a hoy.");
+      return;
+    }
+
+    const horaActual = new Date().toTimeString().slice(0, 5);
+
+    if (
+      formulario.fecha === hoy &&
+      formulario.inicio <= horaActual
+    ) {
+      toast.error(
+        "La hora de inicio debe ser posterior a la hora actual."
+      );
+      return;
+    }
+
+    if (!espacioSeleccionado) {
+      toast.error("El espacio seleccionado no existe.");
+      return;
+    }
+
+    if (disponibles <= 0) {
+      toast.error(
+        "Ya no hay cupos disponibles para este tipo de espacio."
+      );
       return;
     }
 
     setGuardando(true);
 
     try {
+      const reservasEnLaFecha = query(
+        collection(db, "reservas"),
+        where("fecha", "==", formulario.fecha)
+      );
+
+      const snapshot = await getDocs(reservasEnLaFecha);
+
+      const existeCruce = snapshot.docs.some((documento) => {
+        const reserva = documento.data();
+
+        const mismoEspacio =
+          reserva.espacioId === espacioSeleccionado.id ||
+          reserva.espacio === espacioSeleccionado.nombre;
+
+        const horariosSeCruzan =
+          reserva.inicio < formulario.fin &&
+          reserva.fin > formulario.inicio;
+
+        return (
+          reserva.estado === "activa" &&
+          mismoEspacio &&
+          horariosSeCruzan
+        );
+      });
+
+      if (existeCruce) {
+        toast.error(
+          "Este espacio ya tiene una reserva que se cruza con el horario seleccionado."
+        );
+        return;
+      }
+
       await addDoc(collection(db, "reservas"), {
         usuarioId: user.uid,
         usuarioNombre:
-          `${perfil?.nombre || ""} ${perfil?.apellido || ""}`.trim() ||
-          user.email,
+          `${perfil?.nombre || ""} ${
+            perfil?.apellido || ""
+          }`.trim() || user.email,
         fecha: formulario.fecha,
         inicio: formulario.inicio,
         fin: formulario.fin,
+        espacioId: espacioSeleccionado.id,
         espacio: espacioSeleccionado.nombre,
         tipo: espacioSeleccionado.tipo,
         discapacidad: formulario.discapacidad,
@@ -110,13 +238,15 @@ const Reservation = () => {
 
       toast.success("Espacio reservado correctamente.");
 
-      setFormulario({
-        ...formulario,
+      setFormulario((formularioAnterior) => ({
+        ...formularioAnterior,
         observaciones: "",
-      });
+      }));
     } catch (err) {
-      console.error(err);
-      toast.error("No se pudo reservar el espacio.");
+      console.error("Error al guardar la reserva:", err);
+      toast.error(
+        err.message || "No se pudo guardar la reserva."
+      );
     } finally {
       setGuardando(false);
     }
@@ -125,22 +255,30 @@ const Reservation = () => {
   const cancelarReserva = async (id) => {
     try {
       await deleteDoc(doc(db, "reservas", id));
-      toast.success("Ha cancelado el espacio");
+      toast.success("Reserva cancelada correctamente.");
     } catch (err) {
-      console.error(err);
-      toast.error("No se pudo cancelar.");
+      console.error("Error al cancelar la reserva:", err);
+      toast.error("No se pudo cancelar la reserva.");
     }
   };
 
   return (
-    <section className="section reservation-section" data-aos="fade-up">
+    <section
+      className="section reservation-section"
+      data-aos="fade-up"
+    >
       <h2 className="section-title">Reservar espacio</h2>
 
-      <form className="reservation-form" onSubmit={guardarReserva}>
+      <form
+        className="reservation-form"
+        onSubmit={guardarReserva}
+      >
         <div className="form-grid">
           <label className="form-item">
             <i className="fa-regular fa-calendar icon-left"></i>
+
             <span className="label">Fecha</span>
+
             <input
               className="value"
               type="date"
@@ -154,7 +292,9 @@ const Reservation = () => {
 
           <label className="form-item">
             <i className="fa-regular fa-clock icon-left"></i>
+
             <span className="label">Inicio</span>
+
             <input
               className="value"
               type="time"
@@ -167,7 +307,9 @@ const Reservation = () => {
 
           <label className="form-item">
             <i className="fa-regular fa-clock icon-left"></i>
+
             <span className="label">Fin</span>
+
             <input
               className="value"
               type="time"
@@ -180,23 +322,27 @@ const Reservation = () => {
 
           <label className="form-item">
             <i className="fa-solid fa-wheelchair icon-left"></i>
+
             <span className="label">Discapacidad</span>
+
             <select
               className="value"
               name="discapacidad"
               value={formulario.discapacidad}
               onChange={cambiarCampo}
             >
-              <option>Física</option>
-              <option>Visual</option>
-              <option>Auditiva</option>
-              <option>Otra</option>
+              <option value="Física">Física</option>
+              <option value="Visual">Visual</option>
+              <option value="Auditiva">Auditiva</option>
+              <option value="Otra">Otra</option>
             </select>
           </label>
 
           <label className="form-item full-width">
             <i className="fa-solid fa-square-parking icon-left"></i>
+
             <span className="label">Espacio</span>
+
             <select
               className="value"
               name="espacioId"
@@ -204,7 +350,10 @@ const Reservation = () => {
               onChange={cambiarCampo}
             >
               {espacios.map((espacio) => (
-                <option key={espacio.id} value={espacio.id}>
+                <option
+                  key={espacio.id}
+                  value={espacio.id}
+                >
                   {espacio.nombre}
                 </option>
               ))}
@@ -213,7 +362,9 @@ const Reservation = () => {
 
           <label className="form-item full-width">
             <i className="fa-solid fa-list icon-left"></i>
+
             <span className="label">Observaciones</span>
+
             <input
               className="value"
               type="text"
@@ -221,12 +372,14 @@ const Reservation = () => {
               value={formulario.observaciones}
               onChange={cambiarCampo}
               placeholder="Ej.: Uso silla de ruedas"
+              maxLength={200}
             />
           </label>
         </div>
 
         <p className="reservation-message">
-          Cupos disponibles para este tipo: <b>{disponibles}</b> de 10
+          Cupos disponibles para este tipo:{" "}
+          <b>{disponibles}</b> de 10
         </p>
 
         <button
@@ -235,7 +388,10 @@ const Reservation = () => {
           disabled={guardando || disponibles <= 0}
         >
           <i className="fa-solid fa-address-card"></i>
-          {guardando ? "Guardando..." : "Reservar espacio"}
+
+          {guardando
+            ? "Guardando..."
+            : "Reservar espacio"}
         </button>
       </form>
 
@@ -248,17 +404,24 @@ const Reservation = () => {
           </p>
         ) : (
           misReservas.map((reserva) => (
-            <article className="reservation-record" key={reserva.id}>
+            <article
+              className="reservation-record"
+              key={reserva.id}
+            >
               <div>
                 <strong>{reserva.espacio}</strong>
+
                 <span>
-                  {reserva.fecha} · {reserva.inicio} - {reserva.fin}
+                  {reserva.fecha} · {reserva.inicio} -{" "}
+                  {reserva.fin}
                 </span>
               </div>
 
               <button
                 type="button"
-                onClick={() => cancelarReserva(reserva.id)}
+                onClick={() =>
+                  cancelarReserva(reserva.id)
+                }
               >
                 Cancelar
               </button>

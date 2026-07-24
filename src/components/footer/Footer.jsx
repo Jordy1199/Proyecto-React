@@ -109,9 +109,9 @@ function Footer() {
             2026 EPN Accesible - Proyecto de Diseño de Interfaces - Escuela Politécnica Nacional
           </p>
           <div className="footer__socials">
-            <a href="#" aria-label="Facebook"><i className="fa-brands fa-facebook-f"></i></a>
-            <a href="#" aria-label="Instagram"><i className="fa-brands fa-instagram"></i></a>
-            <a href="#" aria-label="X">
+            <a href="https://www.facebook.com/EPNQuito/" target="_blank" rel="noreferrer" aria-label="Facebook de la EPN"><i className="fa-brands fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/epn_ecuador/" target="_blank" rel="noreferrer" aria-label="Instagram de la EPN"><i className="fa-brands fa-instagram"></i></a>
+            <a href="https://x.com/EPNEcuador" target="_blank" rel="noreferrer" aria-label="X de la EPN">
               <i className="fa-brands fa-square-x-twitter"></i>
             </a>
           </div>

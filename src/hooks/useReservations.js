@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 
 import { db } from "../firebase/firebaseConfig";
+import { reservaVencida } from "../data/spaces";
 
 export const useReservations = () => {
   const [reservas, setReservas] = useState([]);
@@ -16,7 +17,7 @@ export const useReservations = () => {
           ...documento.data(),
         }));
 
-        setReservas(datos);
+        setReservas(datos.filter((reserva) => !reservaVencida(reserva)));
         setCargandoReservas(false);
       },
       (error) => {
