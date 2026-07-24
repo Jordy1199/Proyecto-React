@@ -4,12 +4,14 @@ import InfoTabs from "../components/infoTabs/InfoTabs";
 import Search from "../components/search/Search";
 import Services from "../components/services/Services";
 import Status from "../components/status/Status";
+import Statistics from "../components/statistics/Statistics";
 import Types from "../components/types/Types";
 
 const HomePage = () => {
   return (
     <main className="main-content home-page">
       <Status />
+      <Statistics />
       <Types />
       <Search />
       <InfoTabs />
@@ -17,6 +19,7 @@ const HomePage = () => {
       <Gallery />
       <AppSection />
     </main>
+    
   );
 };
 
