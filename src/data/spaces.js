@@ -53,7 +53,16 @@ export const fechaLocalActual = () => {
   return `${year}-${month}-${day}`;
 };
 
-export const reservaVencida = (reserva) => reserva.fecha < fechaLocalActual();
+export const reservaVencida = (reserva) => {
+  if (!reserva.fecha) return false;
+
+  // Combinamos fecha + hora de fin de la reserva y comparamos
+  // contra el momento actual, no solo contra el día actual.
+  const horaFin = reserva.fin || "23:59";
+  const finReserva = new Date(`${reserva.fecha}T${horaFin}:00`);
+
+  return finReserva < new Date();
+};
 
 export const reservasActivas = (reservas) =>
   reservas.filter(
