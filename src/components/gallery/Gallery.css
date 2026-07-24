@@ -1,94 +1,83 @@
 /* ==========================================
-   SECCIÓN GENERAL DE LA GALERÍA
+   1. CONTENEDOR SECCIÓN GALERÍA (ALINEADO)
    ========================================== */
 .gallery-section {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2.5rem 1rem;
+  max-width: 100%;
+  margin: 0 auto 2rem auto;
+  padding: 2rem;
+  background-color: #172031; /* Mismo fondo de las tarjetas del dashboard */
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  overflow: hidden; /* Evita que el slider rompa los bordes redondeados */
 }
 
+/* Encabezado */
 .gallery__title {
-  text-align: center;
-  font-size: 2.25rem;
+  color: #3b82f6;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #1a202c;
-  margin-bottom: 0.5rem;
+  text-align: center;
+  margin: 0 0 0.5rem 0;
 }
 
 .gallery__description {
+  color: #94a3b8;
+  font-size: 0.95rem;
   text-align: center;
-  color: #4a5568;
-  font-size: 1rem;
-  margin-bottom: 2.5rem;
+  margin: 0 0 1.5rem 0;
 }
 
 /* ==========================================
-   SWIPER & TARJETAS (Fix de altura)
+   2. CARRUSEL (SWIPER)
    ========================================== */
 .gallery__swiper {
   width: 100%;
-  padding-bottom: 3.5rem !important; /* Espacio para los puntos de paginación */
+  padding-bottom: 2.5rem !important;
 }
 
-/* Forzamos al wrapper de Swiper a no colapsar */
-.gallery__swiper .swiper-wrapper {
-  align-items: stretch;
-}
-
-.gallery__swiper .swiper-slide {
-  height: auto; /* Acomoda las tarjetas en la misma fila */
-}
-
-/* La tarjeta define la altura fija para TODAS */
 .gallery-card {
   position: relative;
-  width: 100%;
-  height: 280px; /* <--- ALTURA FIJA: Garantiza que todas midan exactamente igual */
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
+  height: 220px;
   cursor: pointer;
-  background-color: #e2e8f0;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+  background-color: #0f172a;
 }
 
-.gallery-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
-}
-
-/* Ajuste de la imagen */
 .gallery-img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Corta proporcionalmente para llenar los 280px */
+  object-fit: cover;
   object-position: center;
   display: block;
+  transition: transform 0.3s ease;
 }
 
-/* Overlay "Ver detalle" */
+.gallery-card:hover .gallery-img {
+  transform: scale(1.03);
+}
+
 .gallery-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(15, 23, 42, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease;
-  backdrop-filter: blur(2px);
 }
 
 .gallery-overlay span {
   color: #ffffff;
   font-weight: 600;
-  background: rgba(0, 0, 0, 0.65);
-  padding: 10px 20px;
-  border-radius: 30px;
   font-size: 0.9rem;
-  letter-spacing: 0.5px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  background: rgba(59, 130, 246, 0.85);
+  border-radius: 20px;
 }
 
 .gallery-card:hover .gallery-overlay {
@@ -96,86 +85,96 @@
 }
 
 /* ==========================================
-   VENTANA MODAL
+   3. VENTANA MODAL (TOTALMENTE RESPONSIVE)
    ========================================== */
 .gallery-modal {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(4px);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-  padding: 1.25rem;
-  animation: fadeIn 0.25s ease-out;
+  z-index: 99999;
+  padding: 1rem; /* Margen de seguridad para pantallas pequeñas */
 }
 
 .gallery-modal__content {
   position: relative;
-  background: #ffffff;
+  background: #1e293b;
+  border: 1px solid #334155;
   border-radius: 16px;
-  max-width: 620px;
+  max-width: 480px;
   width: 100%;
+  max-height: 85vh; /* Garantiza que toda la ventana quepa dentro del cel */
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  animation: scaleUp 0.25s ease-out;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .gallery-modal__close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(0, 0, 0, 0.6);
+  top: 10px;
+  right: 10px;
+  background: rgba(15, 23, 42, 0.8);
   color: #ffffff;
-  border: none;
-  font-size: 1.6rem;
-  width: 36px;
-  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 1.2rem;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   cursor: pointer;
-  z-index: 10;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .gallery-modal__close:hover {
   background: rgba(220, 38, 38, 0.9);
+  transform: scale(1.05);
 }
 
+/* Ajuste inteligente de la imagen del modal */
 .gallery-modal__img {
   width: 100%;
-  max-height: 380px;
+  height: 220px; /* Alto fijo base */
+  max-height: 40vh; /* Nunca supera el 40% del alto del celular */
   object-fit: cover;
+  object-position: center;
   display: block;
+  background-color: #0f172a;
+  flex-shrink: 0; /* Impide que la imagen aplaste la caja */
 }
 
 .gallery-modal__info {
-  padding: 1.5rem;
+  padding: 1.25rem;
+  background-color: #1e293b;
+  overflow-y: auto; /* Permite scroll del texto si la pantalla es muy pequeña */
 }
 
 .gallery-modal__info h4 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.35rem;
-  color: #0f172a;
+  margin: 0 0 0.4rem 0;
+  font-size: 1.15rem;
+  color: #f8fafc;
   font-weight: 700;
 }
 
 .gallery-modal__info p {
   margin: 0;
-  color: #475569;
-  font-size: 0.98rem;
-  line-height: 1.5;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.45;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes scaleUp {
-  from { transform: scale(0.95); }
-  to { transform: scale(1); }
+/* Ajuste dinámico para pantallas/móviles con poco alto */
+@media (max-height: 680px) {
+  .gallery-modal__img {
+    height: 170px;
+  }
+  .gallery-modal__info {
+    padding: 1rem;
+  }
 }

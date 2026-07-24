@@ -12,20 +12,22 @@
 
 .services-section {
   width: 100%;
-  padding: 60px 24px;
-  background-color: #ffffff;
+  padding: 60px 40px; /* Un padding lateral cómodo para que no pegue a los bordes */
+  box-sizing: border-box;
+  background-color: transparent;
   display: flex;
   justify-content: center;
   overflow: hidden;
+  border-radius: 20px;
 }
 
 .services-container {
-  max-width: 1200px;
   width: 100%;
+  max-width: 100%; /* <-- Cambiado de 1200px a 100% para que use todo el ancho */
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1fr 1fr; /* 50% y 50% exacto para cada lado */
   gap: 50px;
-  align-items: center;
+  align-items: stretch;
 }
 
 @media (max-width: 900px) {
@@ -39,7 +41,7 @@
    SISTEMA DE ANIMACIONES REUTILIZABLES (IDA Y VUELTA)
    ========================================== */
 
-/* 1. ESTADO OCULTO (Cuando la sección sale de pantalla en cualquier dirección) */
+/* 1. ESTADO OCULTO */
 .services-section.is-hidden .anim-item-1,
 .services-section.is-hidden .anim-item-2,
 .services-section.is-hidden .anim-item-3,
@@ -47,18 +49,16 @@
 .services-section.is-hidden .anim-map {
   opacity: 0;
   transform: translateY(30px);
-  /* Transición rápida de salida para que se resetee limpiamente al scrollear */
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* Reset del icono de FontAwesome en el estado oculto */
 .services-section.is-hidden .card-icon-container i {
   opacity: 0;
   transform: scale(0) rotate(-45deg);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* 2. ESTADO ACTIVO (Cuando entra en pantalla al subir o bajar) */
+/* 2. ESTADO ACTIVO */
 .services-section.is-visible .anim-item-1,
 .services-section.is-visible .anim-item-2,
 .services-section.is-visible .anim-item-3,
@@ -69,13 +69,11 @@
               transform 0.8s cubic-bezier(0.215, 0.610, 0.355, 1);
 }
 
-/* Delays para la entrada secuencial de la cabecera y el mapa */
 .services-section.is-visible .anim-item-1 { transition-delay: 50ms; }
 .services-section.is-visible .anim-item-2 { transition-delay: 120ms; }
 .services-section.is-visible .anim-item-3 { transition-delay: 200ms; }
 .services-section.is-visible .anim-map { transition-delay: 250ms; }
 
-/* Entrada dinámica en cascada para las tarjetas */
 .services-section.is-visible .anim-card {
   opacity: 1;
   transform: translateY(0);
@@ -84,12 +82,11 @@
   transition-delay: calc(300ms + (var(--card-index) * 100ms));
 }
 
-/* ¡ANIMACIÓN POP-IN REBOTANTE DE LOS ICONOS! Se activa cada vez que entra a la vista */
 .services-section.is-visible .card-icon-container i {
   opacity: 1;
   transform: scale(1) rotate(0deg);
   transition: opacity 0.5s ease,
-              transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); /* Curva elástica */
+              transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
   transition-delay: calc(400ms + (var(--card-index) * 100ms));
 }
 
@@ -100,6 +97,7 @@
 .services-info-side {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .services-subtitle {
@@ -131,7 +129,6 @@
   gap: 16px;
 }
 
-/* Tarjeta y su Hover suave */
 .service-compact-card {
   display: flex;
   gap: 18px;
@@ -152,7 +149,6 @@
   box-shadow: 0 8px 20px rgba(0, 40, 85, 0.08);
 }
 
-/* Contenedor del Icono */
 .card-icon-container {
   width: 50px;
   height: 50px;
@@ -164,13 +160,11 @@
   flex-shrink: 0;
 }
 
-/* Hover interactivo individual del icono (al pasar el cursor) */
 .service-compact-card:hover .card-icon-container i {
   transform: scale(1.15) rotate(8deg);
   transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* COLORES DE ICONOS INSTITUCIONALES */
 .color-verde {
   background-color: rgba(45, 138, 45, 0.1);
   color: var(--epn-green);
@@ -186,7 +180,6 @@
   color: var(--epn-red);
 }
 
-/* Textos */
 .card-texts h3 {
   color: var(--epn-blue);
   font-size: 1.1rem;
@@ -201,14 +194,23 @@
   line-height: 1.4;
 }
 
-/* MAPA COMPACTO */
+/* ==========================================
+   ESTRUCTURA Y VISIBILIDAD DEL MAPA (SOLUCIÓN FIX)
+   ========================================== */
+
 .services-map-side {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 420px; /* Evita que la columna caiga a 0px */
 }
 
 .services-map-wrapper {
   width: 100%;
-  height: 360px;
+  height: 100%;
+  flex: 1;
+  min-height: 420px;
   position: relative;
   border: 1px solid var(--epn-border-color);
   border-radius: 16px;
@@ -223,9 +225,17 @@
   box-shadow: 0 12px 28px rgba(0, 40, 85, 0.1);
 }
 
-.custom-leaflet-map {
+/* Forzado absoluto para garantizadamente mostrar el lienzo de Leaflet */
+.services-map-wrapper .custom-leaflet-map,
+.services-map-wrapper .leaflet-container {
   width: 100% !important;
   height: 100% !important;
+  min-height: 420px !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1;
 }
 
