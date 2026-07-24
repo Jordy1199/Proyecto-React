@@ -34,14 +34,15 @@ export const espacios = [
   { id: "r1", nombre: "Ruta accesible R1", tipo: "ruta" },
 ];
 
+const tiposPorId = new Map(tiposEspacio.map((tipo) => [tipo.id, tipo]));
+const tiposPorNombreEspacio = new Map(
+  espacios.map((espacio) => [espacio.nombre, espacio.tipo])
+);
+
 export const tipoDeReserva = (reserva) => {
   if (reserva.tipo) return reserva.tipo;
 
-  const espacio = espacios.find(
-    (item) => item.nombre === reserva.espacio
-  );
-
-  return espacio?.tipo || null;
+  return tiposPorNombreEspacio.get(reserva.espacio) || null;
 };
 
 export const fechaLocalActual = () => {
@@ -70,21 +71,30 @@ export const reservasActivas = (reservas) =>
   );
 
 export const cuposDisponibles = (tipoId, reservas, periodo = null) => {
-  const tipo = tiposEspacio.find((item) => item.id === tipoId);
+  const tipo = tiposPorId.get(tipoId);
 
   if (!tipo) return 0;
 
-  const ocupados = reservasActivas(reservas).filter((reserva) => {
-    if (tipoDeReserva(reserva) !== tipoId) return false;
+  let ocupados = 0;
 
-    if (!periodo) return true;
+  for (const reserva of reservas) {
+    if (
+      reserva.estado !== "activa" ||
+      reservaVencida(reserva) ||
+      tipoDeReserva(reserva) !== tipoId
+    ) {
+      continue;
+    }
 
-    return (
-      reserva.fecha === periodo.fecha &&
-      reserva.inicio < periodo.fin &&
-      reserva.fin > periodo.inicio
-    );
-  }).length;
+    if (
+      !periodo ||
+      (reserva.fecha === periodo.fecha &&
+        reserva.inicio < periodo.fin &&
+        reserva.fin > periodo.inicio)
+    ) {
+      ocupados += 1;
+    }
+  }
 
   return Math.max(tipo.capacidad - ocupados, 0);
 };

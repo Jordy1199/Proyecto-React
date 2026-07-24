@@ -10,26 +10,39 @@ const Statistics = () => {
   const chartRef = useRef(null);
   const { reservas, cargandoReservas } = useReservations();
 
-  const estadisticas = useMemo(
-    () =>
-      tiposEspacio.map((tipo) => ({
-        ...tipo,
-        reservados: reservas.filter(
-          (reserva) => tipoDeReserva(reserva) === tipo.id
-        ).length,
-      })),
-    [reservas]
-  );
+  const { estadisticas, totalReservados, tipoMasReservado } = useMemo(() => {
+    const reservadosPorTipo = new Map(
+      tiposEspacio.map((tipo) => [tipo.id, 0])
+    );
 
-  const totalReservados = estadisticas.reduce(
-    (total, tipo) => total + tipo.reservados,
-    0
-  );
+    for (const reserva of reservas) {
+      const tipoId = tipoDeReserva(reserva);
 
-  const tipoMasReservado = estadisticas.reduce(
-    (mayor, tipo) => (tipo.reservados > mayor.reservados ? tipo : mayor),
-    estadisticas[0] || { nombre: "Sin datos", reservados: 0 }
-  );
+      if (reservadosPorTipo.has(tipoId)) {
+        reservadosPorTipo.set(tipoId, reservadosPorTipo.get(tipoId) + 1);
+      }
+    }
+
+    const datos = tiposEspacio.map((tipo) => {
+      const reservados = reservadosPorTipo.get(tipo.id);
+      return { ...tipo, reservados };
+    });
+
+    const total = datos.reduce(
+      (acumulado, tipo) => acumulado + tipo.reservados,
+      0
+    );
+    const tipoMayor = datos.reduce(
+      (mayor, tipo) => (tipo.reservados > mayor.reservados ? tipo : mayor),
+      datos[0] || { nombre: "Sin datos", reservados: 0 }
+    );
+
+    return {
+      estadisticas: datos,
+      totalReservados: total,
+      tipoMasReservado: tipoMayor,
+    };
+  }, [reservas]);
 
   useEffect(() => {
     if (!canvasRef.current || cargandoReservas) return undefined;
