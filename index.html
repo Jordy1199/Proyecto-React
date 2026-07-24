@@ -33,7 +33,14 @@
     }
   });
 </script>
-    <script async type='module' src='https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js'></script>
+    <script>
+      window.addEventListener('load', () => {
+        const s = document.createElement('script');
+        s.type = 'module';
+        s.src = 'https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js';
+        document.body.appendChild(s);
+      });
+    </script>
     <zapier-interfaces-chatbot-embed is-popup='true' chatbot-id='cmrvm8zuy001912nes3c9yzkb'></zapier-interfaces-chatbot-embed>
   </body>
 </html>
