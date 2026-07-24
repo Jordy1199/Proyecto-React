@@ -11,61 +11,61 @@ import 'swiper/css/pagination';
 const galleryData = [
   {
     id: 7,
-    src: '/images/img7.webp',
+    src: '/images/img7.avif',
     title: 'Facultad Ingenieria Civil',
     description: 'Facilita la movilidad en silla de ruedas.'
   },
   {
     id: 8,
-    src: '/images/img8.webp',
+    src: '/images/img8.avif',
     title: 'Facultad Ingenieria Civil',
     description: 'Espacios señalizados y reservados cerca de las aulas para estudiantes con movilidad reducida.'
   },
   {
     id: 9,
-    src: '/images/img9.webp',
+    src: '/images/img9.avif',
     title: 'Biblioteca General',
     description: 'Rutas libres de obstáculos diseñadas para un tránsito seguro en el campus.'
   },
   {
     id: 10,
-    src: '/images/img10.webp',
+    src: '/images/img10.avif',
     title: 'Facultad de Ciencias',
     description: 'Acceso directo con rampas de pendiente baja e iluminación adecuada.'
   },
   {
     id: 11,
-    src: '/images/img11.webp',
+    src: '/images/img11.avif',
     title: 'Edificio de Formacion Basica',
     description: 'Paneles informativos con alto contraste y pictogramas accesibles.'
   },
   {
     id: 12,
-    src: '/images/img12.webp',
+    src: '/images/img12.avif',
     title: 'Facultad Ingenieria Electrica / Electronica',
     description: 'Puertas amplias y niveles adaptados para facilitar el ingreso a zonas prácticas.'
   },
   {
     id: 13,
-    src: '/images/img13.webp',
+    src: '/images/img13.avif',
     title: 'Facultad Ingenieria Mecanica',
     description: 'Espacios de permanencia accesibles cerca de las zonas académicas.'
   },
   {
     id: 14,
-    src: '/images/img14.webp',
+    src: '/images/img14.avif',
     title: 'Facultad Ciencias Administrativas',
     description: 'Elevador prioritario equipado con botones a altura accesible.'
   },
   {
     id: 15,
-    src: '/images/img15.webp',
+    src: '/images/img15.avif',
     title: 'ESFOT',
     description: 'Camino con baldosa podotáctil y pasamanos de doble altura.'
   },
   {
     id: 16,
-    src: '/images/img16.webp',
+    src: '/images/img16.avif',
     title: 'Facultad Ingenieria de Sitemas',
     description: 'Acceso a comedor y asociacion FIS'
   }
@@ -94,7 +94,7 @@ const Gallery = () => {
         }}
         className="gallery__swiper"
       >
-        {galleryData.map((item) => (
+        {galleryData.map((item, index) => (
           <SwiperSlide key={item.id}>
             <button
               type="button"
@@ -106,7 +106,7 @@ const Gallery = () => {
                 src={item.src}
                 alt={item.title}
                 className="gallery-img"
-                loading="lazy"
+                loading={index < 2 ? "eager" : "lazy"}
                 decoding="async"
               />
               <div className="gallery-overlay">
