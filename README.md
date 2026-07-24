@@ -48,7 +48,20 @@ Plataforma web para consultar, gestionar y reservar espacios accesibles (parquea
 
 ## 📸 Capturas
 
-> _Agrega aquí capturas de pantalla del proyecto (mapa, reservas, panel de estadísticas, etc.) para que cualquier visitante entienda el proyecto sin tener que instalarlo._
+<img width="1352" height="608" alt="image" src="https://github.com/user-attachments/assets/46eebdaa-1a5c-4f9c-92ed-3dce88c5b15e" />
+
+<img width="1353" height="608" alt="image" src="https://github.com/user-attachments/assets/8fd9bad0-6dc8-4e73-bb0c-5f6490c1aed3" />
+
+<img width="1354" height="609" alt="image" src="https://github.com/user-attachments/assets/88be31b2-9009-48aa-95d9-8efd21445513" />
+
+<img width="1350" height="607" alt="image" src="https://github.com/user-attachments/assets/9a585604-a292-4952-9eb6-547b0e659079" />
+
+<img width="1352" height="643" alt="image" src="https://github.com/user-attachments/assets/7e796f11-a211-4331-bad0-e61510dd51be" />
+
+<img width="1353" height="609" alt="image" src="https://github.com/user-attachments/assets/e8dc9438-8733-485c-add5-2a71a78e297b" />
+
+<img width="1351" height="610" alt="image" src="https://github.com/user-attachments/assets/2a99cc53-b78c-4af8-bf25-d059f5ae2cac" />
+
 
 ## 🚀 Instalación
 
