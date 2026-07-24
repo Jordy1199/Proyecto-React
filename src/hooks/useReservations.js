@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
-
-import { db } from "../firebase/firebaseConfig";
 import { reservaVencida } from "../data/spaces";
 
 export const useReservations = () => {
@@ -9,9 +6,17 @@ export const useReservations = () => {
   const [cargandoReservas, setCargandoReservas] = useState(true);
 
   useEffect(() => {
-    const cancelarEscucha = onSnapshot(
-      collection(db, "reservas"),
+    let cancelarEscucha;
+    let activo = true;
+
+    Promise.all([import("firebase/firestore"), import("../firebase/firebaseConfig")])
+      .then(([{ collection, onSnapshot }, { db }]) => {
+        if (!activo) return;
+
+        cancelarEscucha = onSnapshot(
+          collection(db, "reservas"),
       (snapshot) => {
+        if (!activo) return;
         const datos = snapshot.docs.map((documento) => ({
           id: documento.id,
           ...documento.data(),
@@ -21,12 +26,22 @@ export const useReservations = () => {
         setCargandoReservas(false);
       },
       (error) => {
+        if (!activo) return;
         console.error("Error al cargar reservas:", error);
         setCargandoReservas(false);
       }
-    );
+        );
+      })
+      .catch((error) => {
+        if (!activo) return;
+        console.error("Error al iniciar las reservas:", error);
+        setCargandoReservas(false);
+      });
 
-    return () => cancelarEscucha();
+    return () => {
+      activo = false;
+      cancelarEscucha?.();
+    };
   }, []);
 
   return { reservas, cargandoReservas };

@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  signOut,
-  onAuthStateChanged,
-  updateProfile,
-  fetchSignInMethodsForEmail,
-} from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-
-import { auth, db } from "../firebase/firebaseConfig";
 import { AuthContext } from "./authContext";
+
+const cargarServiciosFirebase = async () => {
+  const [authModule, firestoreModule, configModule] = await Promise.all([
+    import("firebase/auth"),
+    import("firebase/firestore"),
+    import("../firebase/firebaseConfig"),
+  ]);
+
+  return { ...authModule, ...firestoreModule, ...configModule };
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -20,7 +17,14 @@ export const AuthProvider = ({ children }) => {
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    let activo = true;
+    let unsubscribe;
+
+    cargarServiciosFirebase().then(({ onAuthStateChanged, auth, db, doc, getDoc }) => {
+      if (!activo) return;
+
+      unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        if (!activo) return;
       setUser(firebaseUser);
 
       if (firebaseUser) {
@@ -36,20 +40,40 @@ export const AuthProvider = ({ children }) => {
       }
 
       setCargando(false);
+      });
+    }).catch((error) => {
+      if (!activo) return;
+      console.error("Error al iniciar la autenticación:", error);
+      setCargando(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      activo = false;
+      unsubscribe?.();
+    };
   }, []);
 
   const correoExiste = async (correo) => {
+    const { fetchSignInMethodsForEmail, auth } = await cargarServiciosFirebase();
     const metodos = await fetchSignInMethodsForEmail(auth, correo);
     return metodos.length > 0;
   };
 
-  const login = (correo, password) =>
-    signInWithEmailAndPassword(auth, correo, password);
+  const login = async (correo, password) => {
+    const { signInWithEmailAndPassword, auth } = await cargarServiciosFirebase();
+    return signInWithEmailAndPassword(auth, correo, password);
+  };
 
   const loginConGoogle = async () => {
+    const {
+      signInWithPopup,
+      GoogleAuthProvider,
+      doc,
+      getDoc,
+      setDoc,
+      auth,
+      db,
+    } = await cargarServiciosFirebase();
     const proveedor = new GoogleAuthProvider();
     const credenciales = await signInWithPopup(auth, proveedor);
     const usuarioGoogle = credenciales.user;
@@ -84,6 +108,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const registrar = async ({ nombre, apellido, correo, edad, password }) => {
+    const {
+      createUserWithEmailAndPassword,
+      updateProfile,
+      doc,
+      setDoc,
+      signOut,
+      auth,
+      db,
+    } = await cargarServiciosFirebase();
     const credenciales = await createUserWithEmailAndPassword(
       auth,
       correo,
@@ -113,7 +146,10 @@ export const AuthProvider = ({ children }) => {
     return credenciales;
   };
 
-  const logout = () => signOut(auth);
+  const logout = async () => {
+    const { signOut, auth } = await cargarServiciosFirebase();
+    return signOut(auth);
+  };
 
   return (
     <AuthContext.Provider
