@@ -1,15 +1,10 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { motion } from 'framer-motion';
 import './InfoTabs.css';
 
 function InfoTabs() {
   return (
-    <motion.section 
+    <section
       className="section tabs-section"
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5 }}
       data-aos="fade-up"
     >
       <div className="tabs-card-wrapper">
@@ -65,7 +60,7 @@ function InfoTabs() {
           </TabPanel>
         </Tabs>
       </div>
-    </motion.section>
+    </section>
   );
 }
 

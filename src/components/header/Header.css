@@ -37,6 +37,11 @@
   height: clamp(40px, 4vw + 20px, 48px);
   justify-content: center;
   width: clamp(40px, 4vw + 20px, 48px);
+  transition: transform 0.4s ease;
+}
+
+.header-logo:hover .logo-circle {
+  transform: rotate(180deg);
 }
 
 .header-title {

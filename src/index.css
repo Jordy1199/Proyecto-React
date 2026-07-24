@@ -119,6 +119,16 @@ body {
   text-align: center;
 }
 
+.deferred-full-width {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .deferred-full-width {
+    grid-column: 1 / -1;
+  }
+}
+
 .interactive {
   cursor: pointer;
   transition: transform var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1),

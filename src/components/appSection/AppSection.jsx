@@ -5,7 +5,7 @@ const AppSection = () => {
     <section className="app app-section" data-aos="fade-up">
 
       <div className="mobile__video" data-aos="fade-right" data-aos-delay="100">
-        <video autoPlay muted loop playsInline>
+        <video autoPlay muted loop playsInline preload="metadata">
           <source src="/images/appvideo.mp4" type="video/mp4" />
         </video>
       </div>

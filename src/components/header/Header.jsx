@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
-import Typed from "typed.js";
-import { motion } from "framer-motion";
 
 import { useAuth } from "../../hooks/useAuth";
 import { useTheme } from "../../hooks/useTheme";
@@ -31,17 +29,27 @@ const Header = () => {
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
-    const typed = new Typed(typedTarget.current, {
-      strings: ["EPN Accesible", "Gestión de Espacios"],
-      typeSpeed: 70,
-      backSpeed: 45,
-      backDelay: 1800,
-      loop: true,
-      showCursor: true,
-      cursorChar: "|",
+    let typed;
+    let cancelled = false;
+
+    import("typed.js").then(({ default: Typed }) => {
+      if (cancelled || !typedTarget.current) return;
+
+      typed = new Typed(typedTarget.current, {
+        strings: ["EPN Accesible", "Gestión de Espacios"],
+        typeSpeed: 70,
+        backSpeed: 45,
+        backDelay: 1800,
+        loop: true,
+        showCursor: true,
+        cursorChar: "|",
+      });
     });
 
-    return () => typed.destroy();
+    return () => {
+      cancelled = true;
+      typed?.destroy();
+    };
   }, []);
 
   const cerrarMenu = () => setMenuAbierto(false);
@@ -63,13 +71,9 @@ const Header = () => {
           onClick={cerrarMenu}
           aria-label="Ir al inicio"
         >
-          <motion.div
-            className="logo-circle"
-            whileHover={{ rotate: 180 }}
-            transition={{ duration: 0.4 }}
-          >
+          <div className="logo-circle">
             <i className="fa-solid fa-wheelchair"></i>
-          </motion.div>
+          </div>
         </NavLink>
 
         <div className="header-title">

@@ -93,7 +93,6 @@ const Reservation = () => {
 
   useEffect(() => {
     if (!user) {
-      setMisReservas([]);
       return;
     }
 

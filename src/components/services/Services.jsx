@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { toast } from 'react-toastify';
+import 'leaflet/dist/leaflet.css';
 import './Services.css';
 
 // Parche obligatorio para iconos de Leaflet en entornos React + Vite

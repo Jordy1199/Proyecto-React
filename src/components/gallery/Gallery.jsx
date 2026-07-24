@@ -106,7 +106,7 @@ const Gallery = () => {
                 src={item.src}
                 alt={item.title}
                 className="gallery-img"
-                loading={item.id === 7 ? "eager" : "lazy"}
+                loading="lazy"
                 decoding="async"
               />
               <div className="gallery-overlay">
