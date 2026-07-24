@@ -4,10 +4,11 @@ import { useAuth } from "../../hooks/useAuth";
 import "./AuthModal.css";
 
 const AuthForm = ({ onSuccess }) => {
-  const { login, registrar } = useAuth();
+  const { login, registrar, loginConGoogle } = useAuth();
 
   const [vista, setVista] = useState("login");
   const [cargando, setCargando] = useState(false);
+  const [cargandoGoogle, setCargandoGoogle] = useState(false);
   const [error, setError] = useState("");
   const [exito, setExito] = useState("");
 
@@ -70,6 +71,7 @@ const AuthForm = ({ onSuccess }) => {
         "Ese correo ya está registrado. Intenta iniciar sesión.",
       "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
       "auth/too-many-requests": "Demasiados intentos. Intenta más tarde.",
+      "auth/popup-closed-by-user": "Cerraste la ventana antes de completar el acceso.",
     };
 
     return mensajes[codigo] || "Ocurrió un error. Intenta de nuevo.";
@@ -98,6 +100,21 @@ const AuthForm = ({ onSuccess }) => {
       }
     } finally {
       setCargando(false);
+    }
+  };
+
+  const handleGoogleSubmit = async () => {
+    limpiarMensajes();
+    setCargandoGoogle(true);
+
+    try {
+      await loginConGoogle();
+      setExito("¡Bienvenido!");
+      finalizarAutenticacion(800);
+    } catch (err) {
+      setError(traducirError(err.code));
+    } finally {
+      setCargandoGoogle(false);
     }
   };
 
@@ -164,6 +181,20 @@ const AuthForm = ({ onSuccess }) => {
 
       {error && <div className="auth-message auth-message-error">{error}</div>}
       {exito && <div className="auth-message auth-message-success">{exito}</div>}
+
+      <button
+        type="button"
+        className="auth-google-btn"
+        onClick={handleGoogleSubmit}
+        disabled={cargandoGoogle}
+      >
+        <i className="fa-brands fa-google"></i>
+        {cargandoGoogle ? "Conectando..." : "Continuar con Google"}
+      </button>
+
+      <div className="auth-divider">
+        <span>o</span>
+      </div>
 
       {vista === "login" ? (
         <form className="auth-form" onSubmit={handleLoginSubmit}>

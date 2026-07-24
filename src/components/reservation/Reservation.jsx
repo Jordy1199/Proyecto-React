@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import emailjs from "@emailjs/browser";
 
 import { db } from "../../firebase/firebaseConfig";
 import {
@@ -23,6 +24,41 @@ import {
 import { useAuth } from "../../hooks/useAuth";
 import { useReservations } from "../../hooks/useReservations";
 import "./Reservation.css";
+
+const EMAILJS_SERVICE_ID = "service_qky7mia";
+const EMAILJS_TEMPLATE_ID = "template_jn6qf4v";
+const EMAILJS_PUBLIC_KEY = "VIc3-eK343RWFW1Sr";
+
+const notificarReservaExitosa = (usuario, perfilUsuario, datosReserva) => {
+  const esUsuarioGoogle = usuario?.providerData?.some(
+    (proveedor) => proveedor.providerId === "google.com"
+  );
+
+  if (!esUsuarioGoogle) return;
+
+  const nombreUsuario =
+    `${perfilUsuario?.nombre || ""} ${perfilUsuario?.apellido || ""}`.trim() ||
+    usuario.displayName ||
+    "Usuario";
+
+  emailjs
+    .send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      {
+        correo_usuario: usuario.email,
+        nombre_usuario: nombreUsuario,
+        espacio: datosReserva.espacio,
+        fecha: datosReserva.fecha,
+        inicio: datosReserva.inicio,
+        fin: datosReserva.fin,
+      },
+      { publicKey: EMAILJS_PUBLIC_KEY }
+    )
+    .catch((err) => {
+      console.error("No se pudo enviar el correo de confirmación:", err);
+    });
+};
 
 const Reservation = () => {
   const { user, perfil } = useAuth();
@@ -237,6 +273,12 @@ const Reservation = () => {
       });
 
       toast.success("Espacio reservado correctamente.");
+      notificarReservaExitosa(user, perfil, {
+        espacio: espacioSeleccionado.nombre,
+        fecha: formulario.fecha,
+        inicio: formulario.inicio,
+        fin: formulario.fin,
+      });
 
       setFormulario((formularioAnterior) => ({
         ...formularioAnterior,
