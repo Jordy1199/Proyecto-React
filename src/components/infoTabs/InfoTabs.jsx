@@ -55,7 +55,6 @@ function InfoTabs() {
             </div>
           </TabPanel>
 
-          {/* Pestaña 3: Nuestro Objetivo */}
           <TabPanel className="custom-tab-panel" selectedClassName="custom-tab-panel--selected">
             <div className="tab-content animate-fade-in">
               <h3>Por un campus más inclusivo</h3>
